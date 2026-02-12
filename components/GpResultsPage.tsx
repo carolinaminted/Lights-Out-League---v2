@@ -122,14 +122,14 @@ const GpResultsPage: React.FC<GpResultsPageProps> = ({ raceResults, allDrivers, 
             </div>
             
             {/* Main Content Card - Fills remaining space */}
-            <div className="flex-1 md:min-h-0 flex flex-col bg-carbon-fiber rounded-xl border border-pure-white/10 shadow-xl md:overflow-hidden relative mb-12 md:mb-8">
+            <div className="flex-1 md:min-h-0 flex flex-col card-premium shadow-xl md:overflow-hidden relative mb-12 md:mb-8">
                 {selectedEvent ? (
                     <div className="flex flex-col h-full">
                         {/* Event Header Panel */}
                         <div className="flex-none px-4 py-3 border-b border-pure-white/10 bg-gradient-to-r from-carbon-black/80 to-carbon-black/40 flex flex-row justify-between items-center gap-2">
                             <div>
                                 <div className="flex items-baseline gap-3">
-                                    <h2 className="text-xl md:text-2xl font-black text-pure-white leading-tight">{selectedEvent.name}</h2>
+                                    <h2 className="text-xl md:text-2xl font-black text-pure-white leading-tight italic uppercase tracking-tighter">{selectedEvent.name}</h2>
                                     {eventDate && (
                                         <span className="text-sm md:text-base font-bold text-highlight-silver/50 uppercase tracking-widest">
                                             {eventDate}
@@ -268,7 +268,7 @@ const ResultTable: React.FC<ResultTableProps> = ({ results, allDrivers, allConst
         <table className="w-full text-left border-collapse">
             <thead className="bg-carbon-black/95 sticky top-0 z-10 backdrop-blur-md shadow-sm text-xs font-bold uppercase text-highlight-silver">
                 <tr>
-                    <th className="py-3 px-4 w-12 text-center">Pos</th>
+                    <th className="py-3 px-4 w-16 text-center">Pos</th>
                     <th className="py-3 px-4">Driver</th>
                     <th className="py-3 px-4 hidden sm:table-cell">Team</th>
                 </tr>
@@ -278,20 +278,21 @@ const ResultTable: React.FC<ResultTableProps> = ({ results, allDrivers, allConst
                     if (!driverId) return null;
                     const { driver, constructor } = getEntity(driverId);
                     
+                    const rankClass = 
+                        index === 0 ? 'bg-yellow-500/10 text-yellow-500 text-glow-gold border border-yellow-500/30' :
+                        index === 1 ? 'bg-gray-300/10 text-gray-300 text-glow-silver border border-gray-300/30' :
+                        index === 2 ? 'bg-orange-700/10 text-orange-400 text-glow-bronze border border-orange-700/30' :
+                        'text-highlight-silver font-mono bg-pure-white/5 border border-transparent';
+
                     return (
                         <tr key={index} className="hover:bg-pure-white/5 transition-colors group">
                             <td className="py-3 px-4 text-center">
-                                <span className={`inline-flex items-center justify-center w-6 h-6 rounded font-bold text-xs ${
-                                    index === 0 ? 'bg-yellow-500 text-black shadow-yellow-500/20' : 
-                                    index === 1 ? 'bg-gray-300 text-black' : 
-                                    index === 2 ? 'bg-orange-700 text-white' : 
-                                    'text-highlight-silver group-hover:text-pure-white'
-                                }`}>
+                                <span className={`inline-flex items-center justify-center w-8 h-8 rounded-lg font-black text-sm ${rankClass}`}>
                                     {index + 1}
                                 </span>
                             </td>
                             <td className="py-3 px-4">
-                                <div className="font-bold text-base md:text-lg text-pure-white">{driver?.name || 'Unknown Driver'}</div>
+                                <div className={`font-bold text-base md:text-lg ${index < 3 ? 'text-pure-white' : 'text-ghost-white'}`}>{driver?.name || 'Unknown Driver'}</div>
                                 {/* Mobile Team Name */}
                                 <div className="sm:hidden text-[10px] text-highlight-silver uppercase tracking-wider mt-0.5" style={{ color: constructor?.color }}>
                                     {constructor?.name || 'Unknown Team'}
@@ -300,8 +301,8 @@ const ResultTable: React.FC<ResultTableProps> = ({ results, allDrivers, allConst
                             <td className="py-3 px-4 hidden sm:table-cell">
                                 {constructor && (
                                     <div className="flex items-center gap-2">
-                                        <div className="w-1 h-4 rounded-full" style={{ backgroundColor: constructor.color }}></div>
-                                        <span className="text-sm font-semibold text-highlight-silver">{constructor.name}</span>
+                                        <div className="w-1.5 h-4 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]" style={{ backgroundColor: constructor.color }}></div>
+                                        <span className="text-sm font-semibold text-highlight-silver uppercase tracking-wide">{constructor.name}</span>
                                     </div>
                                 )}
                             </td>
@@ -322,22 +323,24 @@ const FastestLapDisplay: React.FC<{ driverId: string | null | undefined; allDriv
 
     return (
         <div className="flex flex-col items-center justify-center h-full p-8 text-center bg-gradient-to-b from-purple-900/10 to-transparent">
-            <div className="w-20 h-20 bg-purple-600/20 rounded-full flex items-center justify-center mb-4 ring-1 ring-purple-500/50 shadow-[0_0_30px_rgba(168,85,247,0.15)] animate-pulse-slow">
-                 <FastestLapIcon className="w-10 h-10 text-purple-400" />
-            </div>
-            
-            <h3 className="text-sm font-bold text-highlight-silver uppercase tracking-widest mb-2">Fastest Lap Award</h3>
-            <p className="text-3xl md:text-4xl font-black text-pure-white mb-4">{driver?.name || 'Unknown'}</p>
-            
-            {constructor && (
-                <div 
-                    className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-pure-white/10 bg-carbon-black/50"
-                    style={{ borderColor: `${constructor.color}40` }}
-                >
-                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: constructor.color }}></div>
-                    <span className="text-sm font-bold uppercase tracking-wider" style={{ color: constructor.color }}>{constructor.name}</span>
+            <div className="card-premium-silver p-8 flex flex-col items-center max-w-sm w-full">
+                <div className="w-20 h-20 bg-purple-600/20 rounded-full flex items-center justify-center mb-6 ring-1 ring-purple-500/50 shadow-[0_0_40px_rgba(168,85,247,0.2)] animate-pulse-slow">
+                     <FastestLapIcon className="w-10 h-10 text-purple-400" />
                 </div>
-            )}
+                
+                <h3 className="text-xs font-black text-highlight-silver uppercase tracking-[0.2em] mb-2">Fastest Lap Award</h3>
+                <p className="text-3xl md:text-4xl font-black text-pure-white mb-6 italic uppercase tracking-tight">{driver?.name || 'Unknown'}</p>
+                
+                {constructor && (
+                    <div 
+                        className="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-pure-white/10 bg-carbon-black/50 shadow-lg"
+                        style={{ borderColor: `${constructor.color}40` }}
+                    >
+                        <div className="w-2.5 h-2.5 rounded-full shadow-[0_0_8px_rgba(0,0,0,0.5)]" style={{ backgroundColor: constructor.color }}></div>
+                        <span className="text-sm font-bold uppercase tracking-wider" style={{ color: constructor.color }}>{constructor.name}</span>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

@@ -63,8 +63,8 @@ const SelectorGroup: React.FC<SelectorGroupProps> = ({ title, slots, options, se
 
     const modalBody = (
       <div className="p-6">
-        <h4 className="text-2xl font-bold mb-4">Select {placeholderText}</h4>
-        <div className={`grid ${gridCols} gap-4`}>
+        <h4 className="text-2xl font-bold mb-6 text-pure-white italic uppercase tracking-wider text-center">Select {placeholderText}</h4>
+        <div className={`grid ${gridCols} gap-3`}>
           {options.map(option => {
             const isSelected = selected.includes(option.id);
             const canSelect = hasRemaining(option.id, entityType);
@@ -85,17 +85,27 @@ const SelectorGroup: React.FC<SelectorGroupProps> = ({ title, slots, options, se
                 style={{
                   borderColor: !isModalOptionDisabled && color ? color : undefined,
                   backgroundColor: !isModalOptionDisabled && color ? hexToRgba(color, 0.15) : undefined,
-                  boxShadow: !isModalOptionDisabled && color ? `0 4px 6px -1px ${hexToRgba(color, 0.1)}` : undefined
+                  boxShadow: !isModalOptionDisabled && color ? `0 4px 15px -3px ${hexToRgba(color, 0.1)}` : undefined
                 }}
                 className={`
-                  option-card flex flex-col items-center justify-center text-center gap-1 h-24 rounded-xl px-2 border-2
-                  transition-all duration-200
-                  ${isModalOptionDisabled ? 'bg-accent-gray opacity-40 cursor-not-allowed border-transparent' : 'bg-carbon-black border-accent-gray hover:border-current cursor-pointer hover:scale-[1.02]'}
+                  relative flex flex-col items-center justify-center text-center gap-1 h-24 rounded-xl px-2 border transition-all duration-200 group overflow-hidden
+                  ${isModalOptionDisabled 
+                    ? 'bg-accent-gray opacity-40 cursor-not-allowed border-transparent' 
+                    : 'bg-carbon-black border-accent-gray hover:border-pure-white/50 cursor-pointer hover:scale-[1.02] hover:shadow-lg'
+                  }
                 `}
               >
-                <span className="option-label font-bold text-sm md:text-base leading-tight">{option.name}</span>
-                <span className="option-usage text-xs opacity-70 leading-none mt-1">{usageCount} / {limit} used</span>
-                {!canSelect && <span className="text-xs text-primary-red font-bold mt-1">Limit Reached</span>}
+                {/* Stripe for team color */}
+                {!isModalOptionDisabled && color && <div className="absolute left-0 top-0 bottom-0 w-1" style={{backgroundColor: color}}></div>}
+                
+                <span className="font-bold text-sm md:text-base leading-tight text-pure-white z-10">{option.name}</span>
+                
+                <div className="telemetry-row mt-1 py-0 px-2 rounded bg-black/30 border border-white/5 text-[9px] z-10">
+                    <span className="telemetry-value font-mono">{usageCount} / {limit}</span>
+                </div>
+                
+                {!canSelect && <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-20 backdrop-blur-[1px]"><span className="text-[10px] font-black uppercase text-red-500 tracking-widest border border-red-500 px-2 py-1 rounded bg-black/80">Limit</span></div>}
+                {isSelected && <div className="absolute inset-0 flex items-center justify-center bg-green-900/60 z-20 backdrop-blur-[1px]"><span className="text-[10px] font-black uppercase text-green-400 tracking-widest border border-green-500 px-2 py-1 rounded bg-black/80">Picked</span></div>}
               </div>
             );
           })}
@@ -112,16 +122,24 @@ const SelectorGroup: React.FC<SelectorGroupProps> = ({ title, slots, options, se
                           'grid-cols-1 md:grid-cols-3';
 
   return (
-    <div className={`bg-carbon-fiber rounded-lg p-3 ring-1 ring-pure-white/10 border border-pure-white/5 transition-opacity duration-200 ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
-      <h3 className="text-lg font-bold text-pure-white mb-2 flex items-center gap-2">
-        <Icon className={`w-5 h-5 ${entityClass === EntityClass.A ? 'text-primary-red' : 'text-highlight-silver'}`} />
-        {title} <span className="text-highlight-silver font-normal text-sm">({slots} required)</span>
-      </h3>
-      <div className={`grid ${gridLayoutClass} gap-2`}>
+    <div className={`card-premium-silver p-4 md:p-5 transition-opacity duration-200 ${disabled ? 'opacity-50 pointer-events-none' : ''}`}>
+      <div className="flex justify-between items-center mb-4 border-b border-pure-white/5 pb-2">
+          <h3 className="text-lg font-bold text-pure-white flex items-center gap-2 uppercase tracking-wide">
+            <div className={`p-1.5 rounded-lg ${entityClass === EntityClass.A ? 'bg-primary-red/20 text-primary-red' : 'bg-blue-500/20 text-blue-400'}`}>
+                <Icon className="w-5 h-5" />
+            </div>
+            {title}
+          </h3>
+          <span className="text-[10px] font-black bg-carbon-black/50 border border-pure-white/10 px-2 py-1 rounded text-highlight-silver uppercase tracking-wider">
+            {slots} Slot{slots > 1 ? 's' : ''}
+          </span>
+      </div>
+      
+      <div className={`grid ${gridLayoutClass} gap-3`}>
         {Array.from({ length: slots }).map((_, index) => {
           const selectedId = selected[index];
           const selectedOption = options.find(o => o.id === selectedId);
-          const usage = selectedOption ? `${getUsage(selectedOption.id, entityType)} / ${limit} used` : '';
+          const usage = selectedOption ? `${getUsage(selectedOption.id, entityType)} / ${limit}` : '';
           const placeholderText = entityType === 'teams' ? 'Team' : 'Driver';
           const color = selectedOption ? getColor(selectedOption.id) : undefined;
           

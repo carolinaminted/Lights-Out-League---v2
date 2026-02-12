@@ -93,24 +93,27 @@ const DriversTeamsPage: React.FC<DriversTeamsPageProps> = ({ allDrivers, allCons
             rel: 'noopener noreferrer'
         } : {};
 
+        const isClassA = team.class === EntityClass.A;
+
         return (
             <CardComponent 
                 {...cardProps}
-                className={`relative overflow-hidden rounded-xl bg-carbon-black border transition-all duration-300 hover:scale-[1.01] hover:shadow-lg group md:flex md:flex-col ${teamUrl ? 'cursor-pointer' : ''} min-h-[100px] md:min-h-0`}
+                className={`relative overflow-hidden rounded-xl border transition-all duration-300 hover:scale-[1.01] hover:shadow-2xl group md:flex md:flex-col ${teamUrl ? 'cursor-pointer' : ''} min-h-[100px] md:min-h-0 card-hover ${isClassA ? 'card-premium bg-carbon-black' : 'card-premium-blue bg-carbon-black'}`}
                 style={{ 
-                    borderColor: `${teamColor}40`, 
-                    boxShadow: `0 0 10px ${hexToRgba(teamColor, 0.03)}`
+                    borderColor: `${teamColor}40`,
+                    boxShadow: `0 0 15px ${hexToRgba(teamColor, 0.05)}` 
                 }} 
             >
+                {/* Dynamic Gradient Background */}
                 <div 
-                    className="absolute inset-0 z-0 pointer-events-none opacity-10 transition-opacity duration-300 group-hover:opacity-20"
+                    className="absolute inset-0 z-0 pointer-events-none opacity-10 transition-opacity duration-300 group-hover:opacity-25"
                     style={{ background: `linear-gradient(135deg, ${teamColor} 0%, transparent 75%)` }}
                 />
 
                 <div className="relative z-10 p-4 md:flex-1 md:flex md:flex-col overflow-hidden">
-                    <div className="flex justify-between items-center mb-2 border-b border-pure-white/10 pb-2 md:flex-shrink-0">
+                    <div className="flex justify-between items-center mb-3 border-b border-pure-white/10 pb-2 md:flex-shrink-0">
                         <div className="flex flex-col justify-center min-w-0 flex-1">
-                            <h3 className="text-lg md:text-base font-black text-pure-white leading-none tracking-tight flex items-center gap-1.5 truncate uppercase">
+                            <h3 className="text-lg md:text-base font-black text-pure-white leading-none tracking-tight flex items-center gap-1.5 truncate uppercase italic">
                                 {team.name}
                                 {teamUrl && (
                                     <svg className="w-3 h-3 text-highlight-silver opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
@@ -123,10 +126,10 @@ const DriversTeamsPage: React.FC<DriversTeamsPageProps> = ({ allDrivers, allCons
                         />
                     </div>
 
-                    <div className="space-y-1.5 md:flex-1 md:flex md:flex-col md:justify-center overflow-hidden">
+                    <div className="space-y-2 md:flex-1 md:flex md:flex-col md:justify-center overflow-hidden">
                         {drivers.length > 0 ? (
                             drivers.map(driver => (
-                                <div key={driver.id} className="flex items-center gap-2 min-w-0">
+                                <div key={driver.id} className="flex items-center gap-2 min-w-0 bg-pure-white/5 p-1.5 rounded-lg border border-pure-white/5 group-hover:bg-pure-white/10 transition-colors">
                                     <div 
                                         className={`w-2 h-2 rounded-full flex-shrink-0 ${driver.isActive ? '' : 'bg-red-500'}`}
                                         style={{ backgroundColor: driver.isActive ? teamColor : undefined }}
@@ -137,7 +140,7 @@ const DriversTeamsPage: React.FC<DriversTeamsPageProps> = ({ allDrivers, allCons
                                 </div>
                             ))
                         ) : (
-                            <div className="text-[10px] text-highlight-silver italic opacity-50">TBA</div>
+                            <div className="text-[10px] text-highlight-silver italic opacity-50 text-center py-2">TBA</div>
                         )}
                     </div>
                 </div>
@@ -163,15 +166,18 @@ const DriversTeamsPage: React.FC<DriversTeamsPageProps> = ({ allDrivers, allCons
                 <div className="grid grid-cols-1 lg:grid-cols-11 gap-6 items-start">
                     
                     {/* Class A Column - Wider (6/11) and 2 columns inner */}
-                    <div className="lg:col-span-6 flex flex-col bg-carbon-fiber/30 rounded-xl border border-pure-white/5 overflow-hidden shadow-2xl">
-                        <div className="bg-carbon-black/95 backdrop-blur-md py-3 px-4 border-b border-primary-red/30 flex-shrink-0">
-                            <h2 className="text-lg font-black text-pure-white flex items-center gap-2 uppercase tracking-wider">
-                                <span className="w-2.5 h-2.5 rounded-full bg-primary-red shadow-[0_0_8px_rgba(218,41,28,0.6)]"></span>
+                    <div className="lg:col-span-6 flex flex-col card-premium overflow-hidden shadow-2xl">
+                        <div className="bg-carbon-black/95 backdrop-blur-md py-4 px-5 border-b border-primary-red/30 flex-shrink-0 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none transform rotate-12">
+                                <TeamIcon className="w-16 h-16 text-primary-red" />
+                            </div>
+                            <h2 className="text-xl font-black text-pure-white flex items-center gap-2 uppercase tracking-wider italic text-glow-red relative z-10">
+                                <span className="w-3 h-3 rounded-full bg-primary-red shadow-[0_0_12px_rgba(218,41,28,0.8)]"></span>
                                 Class A Constructors
                             </h2>
                         </div>
-                        <div className="p-4">
-                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="p-5">
+                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {classATeams.map(team => (
                                     <TeamCard key={team.id} team={team} />
                                 ))}
@@ -180,15 +186,18 @@ const DriversTeamsPage: React.FC<DriversTeamsPageProps> = ({ allDrivers, allCons
                     </div>
 
                     {/* Class B Column - Narrower (5/11) and 2 columns inner */}
-                    <div className="lg:col-span-5 flex flex-col bg-carbon-fiber/30 rounded-xl border border-pure-white/5 overflow-hidden shadow-2xl">
-                        <div className="bg-carbon-black/95 backdrop-blur-md py-3 px-4 border-b border-blue-500/30 flex-shrink-0">
-                            <h2 className="text-lg font-black text-pure-white flex items-center gap-2 uppercase tracking-wider">
-                                <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.6)]"></span>
+                    <div className="lg:col-span-5 flex flex-col card-premium-blue overflow-hidden shadow-2xl">
+                        <div className="bg-carbon-black/95 backdrop-blur-md py-4 px-5 border-b border-blue-500/30 flex-shrink-0 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none transform rotate-12">
+                                <TeamIcon className="w-16 h-16 text-blue-500" />
+                            </div>
+                            <h2 className="text-xl font-black text-pure-white flex items-center gap-2 uppercase tracking-wider italic drop-shadow-[0_0_8px_rgba(59,130,246,0.6)] relative z-10">
+                                <span className="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_12px_rgba(59,130,246,0.8)]"></span>
                                 Class B Constructors
                             </h2>
                         </div>
-                        <div className="p-4">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div className="p-5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {classBTeams.map(team => (
                                     <TeamCard key={team.id} team={team} />
                                 ))}
