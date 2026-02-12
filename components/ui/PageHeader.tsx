@@ -12,7 +12,7 @@ interface PageHeaderProps {
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, icon: Icon, subtitle, rightAction, leftAction, onIconClick }) => {
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 md:px-0 flex-none mb-4 md:mb-6 pt-4 md:pt-6 relative z-10">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-0 flex-none mb-4 md:mb-6 pt-4 md:pt-6 relative z-30">
             <div className="flex flex-col md:grid md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-0">
                 
                 {/* Left side column (Desktop only) */}

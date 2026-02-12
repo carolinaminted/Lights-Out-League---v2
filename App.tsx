@@ -98,26 +98,17 @@ const getUserRealName = (user: User | null) => {
 // New SideNav component for desktop view
 const SideNav: React.FC<{ user: User | null; activePage: Page; navigateToPage: (page: Page) => void; handleLogout: () => void; livePoints: number }> = ({ user, activePage, navigateToPage, handleLogout, livePoints }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef<HTMLDivElement>(null);
-
-    // Close dropdown on click outside
-    useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-                setIsDropdownOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
+    
+    // NOTE: Removed useRef click-outside listener because for a sidebar accordion, 
+    // it's better if it stays open until explicitly closed or navigated away.
 
     return (
         <aside className="hidden md:flex flex-col w-72 bg-carbon-black border-r border-accent-gray p-4 flex-shrink-0 h-screen overflow-y-auto custom-scrollbar relative z-20">
             {/* Top Red Gradient Overlay */}
             <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-primary-red/[0.03] to-transparent pointer-events-none" />
 
-            {/* Header / User Dropdown */}
-            <div className="relative mb-4 z-10" ref={dropdownRef}>
+            {/* Header / User Accordion */}
+            <div className="relative mb-4 z-10">
                 <button 
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     className={`flex items-center gap-3 w-full p-2 rounded-xl transition-all duration-200 border ${
@@ -138,9 +129,9 @@ const SideNav: React.FC<{ user: User | null; activePage: Page; navigateToPage: (
                    <ChevronDownIcon className={`w-4 h-4 text-highlight-silver transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                {/* Dropdown Menu */}
+                {/* Accordion Menu (Relative position pushes content down) */}
                 {isDropdownOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-carbon-black border border-pure-white/10 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] z-50 overflow-hidden animate-fade-in-down origin-top">
+                    <div className="mt-2 bg-carbon-black/50 border border-pure-white/10 rounded-xl overflow-hidden animate-fade-in-down origin-top">
                         <div className="p-1">
                             <button 
                                 onClick={() => { navigateToPage('profile'); setIsDropdownOpen(false); }}

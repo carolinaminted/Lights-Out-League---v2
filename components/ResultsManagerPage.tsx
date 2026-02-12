@@ -230,8 +230,8 @@ const ResultsManagerPage: React.FC<ResultsManagerPageProps> = ({ raceResults, on
             </div>
             
             <div className="flex flex-col px-4 md:px-0">
-                {/* Control Bar with Event Selector */}
-                <div className="bg-accent-gray/50 backdrop-blur-sm rounded-xl p-3 md:p-4 mb-4 md:mb-6 ring-1 ring-pure-white/10 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-end flex-shrink-0 shadow-lg">
+                {/* Control Bar with Event Selector - Added Z-Index 30 */}
+                <div className="bg-accent-gray/50 backdrop-blur-sm rounded-xl p-3 md:p-4 mb-4 md:mb-6 ring-1 ring-pure-white/10 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-end flex-shrink-0 shadow-lg relative z-30">
                     
                     <div className="w-full md:w-auto flex-grow flex justify-end">
                         <EventSelector 
@@ -251,7 +251,7 @@ const ResultsManagerPage: React.FC<ResultsManagerPageProps> = ({ raceResults, on
                 </div>
 
                 {/* Main Form Area - Expanded natural height, no internal desktop scroll */}
-                <div className="w-full max-w-6xl mx-auto pb-32 md:pb-12">
+                <div className="w-full max-w-6xl mx-auto pb-32 md:pb-12 relative z-10">
                     {selectedEvent ? (
                         <div className="bg-carbon-fiber rounded-xl p-4 md:p-6 border border-pure-white/10 shadow-2xl flex flex-col mb-4">
                             <ResultsForm
