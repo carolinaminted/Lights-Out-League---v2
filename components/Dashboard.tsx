@@ -114,7 +114,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                 </div>
 
                 {/* Minimalist 5 Lights Gantry */}
-                <div className="mb-6 flex flex-col items-center justify-center relative py-2">
+                <div className="mb-6 flex flex-col items-center justify-center relative py-2 stagger-1">
                     {/* Gantry Bar (Thin Line behind lights) */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 md:w-64 h-1 bg-accent-gray rounded-full shadow-lg"></div>
                     
@@ -129,15 +129,29 @@ const Dashboard: React.FC<DashboardProps> = ({
                     </div>
                 </div>
                 
-                <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter text-pure-white mb-2 cursor-pointer active:scale-95 transition-transform uppercase">
+                <h1 className="text-4xl md:text-6xl font-black italic tracking-tighter text-pure-white mb-2 cursor-pointer active:scale-95 transition-transform uppercase stagger-2 text-glow-silver">
                     LIGHTS OUT<br/>LEAGUE
                 </h1>
+
+                {/* User Telemetry - Only for logged in users */}
+                {user && (
+                    <div className="flex items-center justify-center gap-4 mt-4 mb-2 stagger-3 animate-fade-in-up">
+                        <div className="telemetry-row card-premium-silver border-primary-red/20 px-4 py-2 backdrop-blur-md">
+                            <span className="telemetry-label mr-3 text-xs">PTS</span>
+                            <span className="telemetry-value text-lg text-pure-white font-mono">{user.totalPoints || 0}</span>
+                        </div>
+                        <div className="telemetry-row card-premium-silver border-primary-red/20 px-4 py-2 backdrop-blur-md">
+                            <span className="telemetry-label mr-3 text-xs">RANK</span>
+                            <span className="telemetry-value text-lg text-glow-red font-mono">#{user.rank || '-'}</span>
+                        </div>
+                    </div>
+                )}
             </div>
 
-            {/* Next Race Countdown - Liquid Glass / Glass-over-water Effect */}
+            {/* Next Race Countdown - Premium Card */}
             {nextEvent && (
                 <div 
-                    className="mt-6 animate-drive-in opacity-0 [animation-delay:100ms] w-full max-w-sm cursor-pointer group"
+                    className="mt-8 animate-fade-in-up stagger-4 w-full max-w-sm cursor-pointer group"
                     onClick={(e) => {
                         e.stopPropagation(); // Prevent counting clicks on the card
                         setActivePage('picks', { eventId: nextEvent.id });
@@ -150,22 +164,22 @@ const Dashboard: React.FC<DashboardProps> = ({
                         e.currentTarget.style.setProperty('--mouse-y', `${y}px`);
                     }}
                 >
-                    <div className="relative overflow-hidden rounded-2xl bg-carbon-black/30 backdrop-blur-2xl border border-pure-white/10 group-hover:border-primary-red p-6 shadow-2xl transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_30px_rgba(218,41,28,0.2)]">
+                    <div className="card-premium backdrop-blur-md p-6 hover:border-primary-red/50 transition-all duration-300 group-hover:scale-[1.02] group-hover:shadow-[0_0_40px_rgba(218,41,28,0.2)]">
                         {/* Spotlight Gradient Layer */}
                         <div 
                             className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
                             style={{
-                                background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.15), transparent 40%)`
+                                background: `radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(218, 41, 28, 0.1), transparent 40%)`
                             }}
                         />
                         
                         {/* Content */}
                         <div className="relative z-10">
                             <p className="text-[10px] text-highlight-silver uppercase tracking-[0.2em] font-bold mb-2 drop-shadow-sm">Up Next: {nextEvent.location}</p>
-                            <h2 className="text-3xl font-black text-pure-white italic mb-4 drop-shadow-lg">{nextEvent.name}</h2>
+                            <h2 className="text-3xl font-black text-pure-white italic mb-4 drop-shadow-lg leading-none">{nextEvent.name}</h2>
                             
                             <div className="border-t border-pure-white/10 pt-4 flex flex-col items-center">
-                                <p className="text-[10px] text-primary-red uppercase tracking-wider font-bold mb-2">Picks Lock In</p>
+                                <p className="text-[10px] text-primary-red uppercase tracking-wider font-bold mb-2 animate-pulse-red-limited">Picks Lock In</p>
                                 <CountdownTimer targetDate={nextEvent.lockAtUtc} />
                             </div>
                         </div>
@@ -175,9 +189,9 @@ const Dashboard: React.FC<DashboardProps> = ({
 
             {/* Start Engine Button (Only for guests) */}
             {!user && (
-                <div className="animate-drive-in opacity-0 [animation-delay:200ms]">
+                <div className="animate-fade-in-up stagger-4 mt-8">
                     <button 
-                        className="mt-6 bg-primary-red text-pure-white font-bold py-3 px-8 rounded-full shadow-lg hover:scale-105 transition-transform"
+                        className="bg-primary-red text-pure-white font-bold py-3 px-8 rounded-full shadow-lg hover:scale-105 transition-transform hover:shadow-[0_0_20px_rgba(218,41,28,0.5)]"
                     >
                         Start Your Engine
                     </button>
@@ -191,49 +205,49 @@ const Dashboard: React.FC<DashboardProps> = ({
         
         {/* Main Cards Grid: Side-by-side on Desktop for better density */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-            {/* Picks Section - CARBON FIBER */}
+            {/* Picks Section */}
             <div className="animate-peek-up opacity-0 [animation-delay:400ms]">
                 <div 
                     onClick={() => setActivePage('picks')}
-                    className="group relative overflow-hidden bg-carbon-fiber rounded-2xl p-6 md:p-10 border border-pure-white/10 shadow-2xl cursor-pointer hover:border-primary-red/50 transition-all duration-300 transform hover:-translate-y-1 min-h-[350px] flex flex-col justify-center"
+                    className="group card-premium card-hover p-6 md:p-10 cursor-pointer min-h-[350px] flex flex-col justify-center"
                 >
-                    <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-25 group-hover:brightness-150 transition-all transform group-hover:scale-110 duration-500">
-                        <PicksIcon className="w-64 h-64 text-primary-red" />
+                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 group-hover:text-primary-red transition-all transform group-hover:scale-110 duration-500">
+                        <PicksIcon className="w-64 h-64" />
                     </div>
                     <div className="relative z-10">
-                        <div className="w-14 h-14 bg-primary-red/20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(218,41,28,0.3)]">
+                        <div className="w-14 h-14 bg-primary-red/20 rounded-2xl flex items-center justify-center mb-6 shadow-[0_0_15px_rgba(218,41,28,0.3)] border border-primary-red/30 backdrop-blur-md">
                             <PicksIcon className="w-7 h-7 text-primary-red" />
                         </div>
-                        <h2 className="text-4xl font-bold text-pure-white mb-3 group-hover:text-primary-red transition-colors">Race Strategy</h2>
-                        <p className="text-highlight-silver max-w-md text-xl leading-relaxed">
+                        <h2 className="text-4xl font-bold text-pure-white mb-3 group-hover:text-primary-red transition-colors drop-shadow-md">Race Strategy</h2>
+                        <p className="text-highlight-silver max-w-md text-xl leading-relaxed font-light">
                             Make your team and driver selections for the upcoming Grand Prix.
                         </p>
                         <div className="mt-8 flex items-center gap-2 text-pure-white font-bold text-sm uppercase tracking-wider">
-                            Manage Picks <span className="group-hover:translate-x-1 transition-transform">→</span>
+                            Manage Picks <span className="group-hover:translate-x-1 transition-transform text-primary-red">→</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Standings Section - CARBON FIBER */}
+            {/* Standings Section */}
             <FadeInSection delay="0.2s" className="h-full">
                 <div 
                     onClick={() => setActivePage('leaderboard')}
-                    className="group relative overflow-hidden bg-carbon-fiber rounded-2xl p-6 md:p-10 border border-pure-white/10 shadow-xl cursor-pointer hover:border-primary-red/50 hover:shadow-[0_0_20px_rgba(218,41,28,0.2)] transition-all duration-300 h-full flex flex-col justify-center min-h-[350px]"
+                    className="group card-premium card-hover p-6 md:p-10 cursor-pointer h-full flex flex-col justify-center min-h-[350px]"
                 >
-                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-25 group-hover:brightness-150 transition-all transform group-hover:-rotate-12 duration-500">
-                        <LeaderboardIcon className="w-64 h-64 text-primary-red" />
+                    <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 group-hover:text-primary-red transition-all transform group-hover:-rotate-12 duration-500">
+                        <LeaderboardIcon className="w-64 h-64" />
                     </div>
                     <div className="relative z-10">
-                        <div className="w-14 h-14 bg-primary-red/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm shadow-[0_0_15px_rgba(218,41,28,0.3)]">
+                        <div className="w-14 h-14 bg-primary-red/20 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md shadow-[0_0_15px_rgba(218,41,28,0.3)] border border-primary-red/30">
                             <LeaderboardIcon className="w-7 h-7 text-primary-red" />
                         </div>
-                        <h2 className="text-4xl font-bold text-pure-white mb-3 group-hover:text-primary-red transition-colors">Leaderboard</h2>
-                        <p className="text-highlight-silver max-w-sm text-xl leading-relaxed">
+                        <h2 className="text-4xl font-bold text-pure-white mb-3 group-hover:text-primary-red transition-colors drop-shadow-md">Leaderboard</h2>
+                        <p className="text-highlight-silver max-w-sm text-xl leading-relaxed font-light">
                             Track the championship battle.
                         </p>
                         <div className="mt-8 flex items-center gap-2 text-pure-white font-bold text-sm uppercase tracking-wider">
-                            View Leaderboards <span className="group-hover:translate-x-1 transition-transform">→</span>
+                            View Leaderboards <span className="group-hover:translate-x-1 transition-transform text-primary-red">→</span>
                         </div>
                     </div>
                 </div>
@@ -250,18 +264,21 @@ const Dashboard: React.FC<DashboardProps> = ({
                     label="Profile" 
                     sub="History & Stats" 
                     onClick={() => setActivePage('profile')} 
+                    delay="stagger-1"
                 />
                 <QuickAction 
                     icon={LeagueIcon} 
                     label="League" 
                     sub="Rules & Scoring" 
                     onClick={() => setActivePage('league-hub')} 
+                    delay="stagger-2"
                 />
                 <QuickAction 
                     icon={DonationIcon} 
                     label="Donate" 
                     sub="Victory Junction" 
                     onClick={() => setActivePage('donate')} 
+                    delay="stagger-3"
                 />
                 {isAdmin && (
                     <QuickAction 
@@ -270,6 +287,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                         sub="League Controls" 
                         onClick={() => setActivePage('admin')} 
                         highlight // Admin card gets subtle highlight
+                        delay="stagger-4"
                     />
                 )}
             </div>
@@ -281,29 +299,32 @@ const Dashboard: React.FC<DashboardProps> = ({
   );
 };
 
-// Redesigned QuickAction to match Main Card aesthetic (Glass, Carbon, Big Icon)
+// Redesigned QuickAction to match V2 Design System (Premium Cards)
 const QuickAction: React.FC<{ 
     icon: React.FC<React.SVGProps<SVGSVGElement>>; 
     label: string; 
     sub: string;
     onClick: () => void;
     highlight?: boolean;
-}> = ({ icon: Icon, label, sub, onClick, highlight }) => (
+    delay?: string;
+}> = ({ icon: Icon, label, sub, onClick, highlight, delay }) => (
     <div
         onClick={onClick}
-        className={`group relative overflow-hidden bg-carbon-fiber rounded-2xl p-6 border border-pure-white/10 shadow-xl cursor-pointer hover:border-primary-red/50 transition-all duration-300 transform hover:-translate-y-1 min-h-[240px] flex flex-col justify-between ${highlight ? 'ring-1 ring-primary-red/30' : ''}`}
+        className={`group relative overflow-hidden p-6 shadow-xl cursor-pointer transition-all duration-300 min-h-[220px] flex flex-col justify-between animate-fade-in-up ${delay || ''} card-hover ${
+            highlight ? 'card-premium' : 'card-premium-silver'
+        }`}
     >
         {/* Background Icon Faded */}
-        <div className="absolute -top-6 -right-6 p-4 opacity-[0.03] group-hover:opacity-10 group-hover:brightness-150 transition-all transform group-hover:scale-110 group-hover:rotate-12 duration-500 pointer-events-none">
-            <Icon className="w-40 h-40 text-pure-white" />
+        <div className={`absolute -top-6 -right-6 p-4 opacity-[0.03] group-hover:opacity-10 group-hover:brightness-150 transition-all transform group-hover:scale-110 group-hover:rotate-12 duration-500 pointer-events-none ${highlight ? 'text-primary-red' : 'text-pure-white'}`}>
+            <Icon className="w-40 h-40" />
         </div>
 
         <div className="relative z-10">
             {/* Small Icon Container */}
-            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 shadow-[0_0_15px_rgba(218,41,28,0.2)] transition-colors backdrop-blur-sm ${
+            <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 backdrop-blur-sm border ${
                 highlight 
-                ? 'bg-primary-red/20 text-pure-white' 
-                : 'bg-primary-red/10 text-primary-red group-hover:bg-primary-red/20'
+                ? 'bg-primary-red/20 text-pure-white border-primary-red/40 shadow-[0_0_15px_rgba(218,41,28,0.3)]' 
+                : 'bg-pure-white/5 text-highlight-silver border-pure-white/10 group-hover:bg-primary-red/10 group-hover:text-primary-red group-hover:border-primary-red/30 group-hover:shadow-[0_0_15px_rgba(218,41,28,0.2)]'
             }`}>
                 <Icon className="w-6 h-6" />
             </div>

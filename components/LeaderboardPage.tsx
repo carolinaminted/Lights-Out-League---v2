@@ -129,7 +129,7 @@ const RefreshControl: React.FC<{
 const NavTile: React.FC<{ icon: any; title: string; subtitle: string; desc: string; onClick: () => void; delay?: string }> = ({ icon: Icon, title, subtitle, desc, onClick, delay = '0ms' }) => (
     <button
         onClick={onClick}
-        className="group relative overflow-hidden rounded-xl p-6 text-left border border-pure-white/10 hover:border-primary-red/50 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col w-full min-h-[220px] bg-carbon-fiber animate-fade-in-up"
+        className="group relative overflow-hidden rounded-2xl p-6 text-left border shadow-lg hover:shadow-[0_0_30px_rgba(218,41,28,0.15)] transition-all duration-300 transform hover:-translate-y-1 flex flex-col w-full min-h-[220px] animate-fade-in-up card-premium-silver card-hover"
         style={{ animationDelay: delay }}
     >
         {/* Background Icon (Huge & Faded) */}
@@ -139,10 +139,10 @@ const NavTile: React.FC<{ icon: any; title: string; subtitle: string; desc: stri
         
         {/* Header Section */}
         <div className="flex items-start justify-between mb-4 relative z-10">
-             <div className="w-12 h-12 rounded-lg flex items-center justify-center transition-colors shadow-lg border bg-carbon-black/50 text-primary-red border-pure-white/5 group-hover:bg-primary-red/20">
+             <div className="w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-300 shadow-lg border bg-carbon-black/50 text-highlight-silver border-pure-white/10 group-hover:text-primary-red group-hover:border-primary-red/30 group-hover:shadow-[0_0_15px_rgba(218,41,28,0.2)]">
                 <Icon className="w-6 h-6" />
             </div>
-            <p className="text-[10px] font-bold text-highlight-silver uppercase tracking-wider bg-carbon-black/30 px-2 py-1 rounded border border-pure-white/5">{subtitle}</p>
+            <p className="text-[10px] font-bold text-highlight-silver uppercase tracking-wider bg-carbon-black/30 px-2 py-1 rounded border border-pure-white/5 backdrop-blur-sm">{subtitle}</p>
         </div>
         
         {/* Content Section */}
@@ -152,9 +152,9 @@ const NavTile: React.FC<{ icon: any; title: string; subtitle: string; desc: stri
         </div>
         
         {/* Footer Action */}
-        <div className="mt-4 pt-4 border-t border-pure-white/5 flex items-center justify-between text-xs font-bold text-pure-white opacity-60 group-hover:opacity-100 transition-opacity relative z-10">
-            <span>Access</span>
-            <span className="text-primary-red transform group-hover:translate-x-1 transition-transform">&rarr;</span>
+        <div className="mt-4 pt-4 border-t border-pure-white/5 flex items-center justify-between text-xs font-bold text-pure-white opacity-60 group-hover:opacity-100 transition-opacity relative z-10 uppercase tracking-wider">
+            <span>Explore</span>
+            <span className="text-primary-red transform group-hover:translate-x-1 transition-transform text-lg leading-none">&rarr;</span>
         </div>
     </button>
 );
@@ -177,7 +177,7 @@ const SimpleBarChart: React.FC<{ data: { label: string; value: number; color?: s
                                 }} 
                             />
                         </div>
-                        <span className="w-8 md:w-12 font-bold text-pure-white text-right text-xs md:text-sm">{item.value}</span>
+                        <span className="w-8 md:w-12 font-bold text-pure-white text-right text-xs md:text-sm font-mono">{item.value}</span>
                     </div>
                 );
             })}
@@ -198,7 +198,7 @@ const ConstructorPodium: React.FC<{ data: { label: string; value: number; color?
                     <div className="flex flex-col items-center w-1/3 max-w-[120px] animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                         <div className="mb-2 text-center">
                             <span className="block text-xs md:text-sm font-bold text-highlight-silver truncate w-full">{data[1].label}</span>
-                            <span className="block text-lg md:text-xl font-black text-pure-white">{data[1].value}</span>
+                            <span className="block text-lg md:text-xl font-black text-pure-white font-mono">{data[1].value}</span>
                         </div>
                         <div 
                             className="w-full h-28 md:h-40 rounded-t-lg relative shadow-lg" 
@@ -218,7 +218,7 @@ const ConstructorPodium: React.FC<{ data: { label: string; value: number; color?
                         <div className="mb-3 text-center">
                             <div className="text-yellow-400 mb-1 drop-shadow-md"><TrophyIcon className="w-8 h-8 mx-auto"/></div>
                             <span className="block text-sm md:text-base font-bold text-pure-white truncate w-full">{data[0].label}</span>
-                            <span className="block text-2xl md:text-4xl font-black text-primary-red drop-shadow-sm">{data[0].value}</span>
+                            <span className="block text-2xl md:text-4xl font-black text-primary-red drop-shadow-sm font-mono text-glow-red">{data[0].value}</span>
                         </div>
                         <div 
                             className="w-full h-36 md:h-52 rounded-t-lg relative shadow-2xl" 
@@ -237,7 +237,7 @@ const ConstructorPodium: React.FC<{ data: { label: string; value: number; color?
                     <div className="flex flex-col items-center w-1/3 max-w-[120px] animate-fade-in-up" style={{ animationDelay: '200ms' }}>
                         <div className="mb-2 text-center">
                             <span className="block text-xs md:text-sm font-bold text-highlight-silver truncate w-full">{data[2].label}</span>
-                            <span className="block text-lg md:text-xl font-black text-pure-white">{data[2].value}</span>
+                            <span className="block text-lg md:text-xl font-black text-pure-white font-mono">{data[2].value}</span>
                         </div>
                         <div 
                             className="w-full h-20 md:h-28 rounded-t-lg relative shadow-lg" 
@@ -260,7 +260,7 @@ const ConstructorPodium: React.FC<{ data: { label: string; value: number; color?
                             <div className="w-8 text-center font-mono text-highlight-silver font-bold text-sm bg-pure-white/5 rounded py-1">{idx + 4}</div>
                             <div className="w-1.5 h-8 rounded-full" style={{ backgroundColor: team.color, boxShadow: `0 0 8px ${team.color}60` }}></div>
                             <div className="flex-1 font-bold text-sm text-pure-white">{team.label}</div>
-                            <div className="font-mono font-bold text-pure-white text-lg">{team.value} <span className="text-[10px] text-highlight-silver font-normal uppercase">pts</span></div>
+                            <div className="font-mono font-bold text-pure-white text-lg">{team.value} <span className="text-[10px] text-highlight-silver font-normal uppercase font-sans">pts</span></div>
                         </div>
                     ))}
                 </div>
@@ -269,7 +269,7 @@ const ConstructorPodium: React.FC<{ data: { label: string; value: number; color?
     );
 };
 
-const RaceChart: React.FC<{ users: ProcessedUser[], hasMore: boolean, onFetchMore: () => void, isPaging: boolean, onSelectUser?: (user: ProcessedUser) => void }> = ({ users, hasMore, onFetchMore, isPaging, onSelectUser }) => {
+const RaceChart: React.FC<{ users: ProcessedUser[], hasMore: boolean, onFetchMore: () => void, isPaging: boolean, onSelectUser?: (user: ProcessedUser) => void, currentUser: User | null }> = ({ users, hasMore, onFetchMore, isPaging, onSelectUser, currentUser }) => {
     // Safety check: ensure users is defined
     if (!users || users.length === 0) return null;
 
@@ -285,59 +285,81 @@ const RaceChart: React.FC<{ users: ProcessedUser[], hasMore: boolean, onFetchMor
 
                 <div className="absolute top-0 bottom-0 right-10 md:right-14 w-px border-r-2 border-dashed border-pure-white/10 z-0"></div>
 
-                <div className="space-y-1 relative z-10 pb-8 pt-4">
+                <div className="space-y-1.5 relative z-10 pb-8 pt-4">
                     {users.map((user, idx) => {
                         const points = user.totalPoints || 0;
                         const rank = user.rank || idx + 1;
                         const percent = (points / maxPoints) * 100;
+                        const isMe = currentUser && user.id === currentUser.id;
                         
-                        let carColor = "text-primary-red"; 
-                        let rankColor = "text-highlight-silver";
+                        let rankBadgeClass = "bg-carbon-black border border-pure-white/10 text-highlight-silver";
+                        let pointsClass = "text-pure-white";
+                        let carColor = "text-primary-red";
                         
                         if (rank === 1) {
-                            carColor = "text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.6)]";
-                            rankColor = "text-yellow-400";
+                            rankBadgeClass = "bg-yellow-500/10 border border-yellow-500/50 text-yellow-500 text-glow-gold shadow-[0_0_10px_rgba(234,179,8,0.2)]";
+                            pointsClass = "text-yellow-500 text-glow-gold";
+                            carColor = "text-yellow-500 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]";
                         } else if (rank === 2) {
-                            carColor = "text-gray-300 drop-shadow-[0_0_10px_rgba(209,213,219,0.6)]";
-                            rankColor = "text-gray-300";
+                            rankBadgeClass = "bg-gray-300/10 border border-gray-300/50 text-gray-300 text-glow-silver shadow-[0_0_10px_rgba(209,213,219,0.2)]";
+                            pointsClass = "text-gray-300 text-glow-silver";
+                            carColor = "text-gray-300 drop-shadow-[0_0_8px_rgba(209,213,219,0.8)]";
                         } else if (rank === 3) {
-                            carColor = "text-orange-400 drop-shadow-[0_0_10px_rgba(251,146,60,0.6)]";
-                            rankColor = "text-orange-400";
+                            rankBadgeClass = "bg-orange-700/10 border border-orange-700/50 text-orange-400 text-glow-bronze shadow-[0_0_10px_rgba(251,146,60,0.2)]";
+                            pointsClass = "text-orange-400 text-glow-bronze";
+                            carColor = "text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.8)]";
                         }
 
                         // Safe display name handling
                         const displayName = user.displayName || "Unknown Team";
-                        const shortName = displayName.length > 12 ? `${displayName.substring(0, 12)}...` : displayName;
+                        const shortName = displayName.length > 14 ? `${displayName.substring(0, 14)}...` : displayName;
 
                         return (
-                            <div key={user.id} className="flex items-center gap-2 md:gap-3 h-10 md:h-12 group hover:bg-pure-white/5 rounded-lg px-1 md:px-2 transition-colors">
-                                <div className={`w-6 md:w-8 text-center font-black text-sm md:text-lg ${rankColor} shrink-0`}>
+                            <div 
+                                key={user.id} 
+                                className={`
+                                    flex items-center gap-3 md:gap-4 p-2 md:p-3 rounded-xl transition-all duration-200 border-l-[3px] group relative overflow-hidden
+                                    ${isMe 
+                                        ? "border-primary-red bg-gradient-to-r from-primary-red/10 via-primary-red/5 to-transparent" 
+                                        : "border-transparent hover:bg-pure-white/5"
+                                    }
+                                `}
+                            >
+                                {/* Rank Badge */}
+                                <div className={`w-8 h-8 md:w-10 md:h-10 flex items-center justify-center font-black text-sm md:text-base rounded-lg shrink-0 ${rankBadgeClass}`}>
                                     {rank}
                                 </div>
-                                <div className="w-24 md:w-60 text-left font-semibold md:font-bold text-[10px] md:text-sm text-highlight-silver group-hover:text-pure-white transition-colors shrink-0">
-                                    <span className="md:hidden">
-                                        {shortName}
-                                    </span>
-                                    <span className="hidden md:inline truncate">
-                                        {displayName}
-                                    </span>
+
+                                {/* User Info */}
+                                <div className="w-24 md:w-48 text-left shrink-0 z-10">
+                                    <div className={`font-bold text-xs md:text-sm truncate ${isMe ? 'text-pure-white' : 'text-highlight-silver group-hover:text-pure-white'} transition-colors`}>
+                                        <span className="md:hidden">{shortName}</span>
+                                        <span className="hidden md:inline">{displayName}</span>
+                                    </div>
+                                    {isMe && <div className="text-[9px] text-primary-red font-bold uppercase tracking-wider">You</div>}
                                 </div>
-                                <div className="flex-1 relative h-full flex items-center ml-4 md:ml-6 mr-1 md:mr-2">
+
+                                {/* Progress Bar Track */}
+                                <div className="flex-1 relative h-10 md:h-12 flex items-center mx-2">
                                     <div className="absolute left-0 right-0 h-px bg-pure-white/10 w-full rounded-full"></div>
                                     <div 
-                                        className="relative h-full flex items-center justify-end transition-all duration-1000 ease-out pr-6 md:pr-14 cursor-pointer"
+                                        className="relative h-full flex items-center justify-end transition-all duration-1000 ease-out pr-6 md:pr-14 cursor-pointer z-10"
                                         style={{ width: `${percent}%` }}
                                         onClick={() => onSelectUser?.(user)}
                                     >
-                                        <div className="relative group/car">
-                                            <F1CarIcon className={`w-6 h-6 md:w-8 md:h-8 transform -rotate-90 ${carColor} transition-transform group-hover/car:scale-125`} />
-                                            <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-black/80 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover/car:opacity-10 whitespace-nowrap pointer-events-none transition-opacity font-bold uppercase tracking-wider shadow-lg border border-pure-white/10 z-20">
+                                        <div className="relative group/car transform transition-transform duration-300 hover:scale-110">
+                                            <F1CarIcon className={`w-6 h-6 md:w-8 md:h-8 transform -rotate-90 ${carColor}`} />
+                                            
+                                            {/* Tooltip on Car Hover */}
+                                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-carbon-black border border-pure-white/20 text-pure-white text-[9px] px-2 py-1 rounded opacity-0 group-hover/car:opacity-100 whitespace-nowrap pointer-events-none transition-opacity font-bold uppercase tracking-wider shadow-xl z-20">
                                                 Inspect
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="w-8 md:w-12 text-right font-mono font-bold text-xs md:text-sm text-pure-white shrink-0">
+
+                                {/* Points Value */}
+                                <div className={`w-12 md:w-16 text-right font-mono font-bold text-sm md:text-lg shrink-0 ${pointsClass}`}>
                                     {points}
                                 </div>
                             </div>
@@ -381,9 +403,9 @@ const StandingsView: React.FC<{
     
     return (
         <div className="flex flex-col md:h-full animate-fade-in pb-safe overflow-hidden">
-            <div className="flex flex-col md:h-full bg-carbon-fiber border border-pure-white/10 rounded-xl overflow-hidden shadow-2xl">
+            <div className="flex flex-col md:h-full card-premium overflow-hidden shadow-2xl">
                 <div className="md:flex-1 md:overflow-y-auto custom-scrollbar p-4 md:min-h-0 pb-24 md:pb-4">
-                    <RaceChart users={users} hasMore={hasMore} onFetchMore={onFetchMore} isPaging={isPaging} onSelectUser={onSelectUser} />
+                    <RaceChart users={users} hasMore={hasMore} onFetchMore={onFetchMore} isPaging={isPaging} onSelectUser={onSelectUser} currentUser={currentUser} />
                 </div>
             </div>
         </div>
@@ -494,19 +516,19 @@ const PopularityView: React.FC<{
 
             <div className="md:flex-1 md:overflow-y-auto custom-scrollbar pr-1 pb-24 md:pb-0">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-6">
-                    <div className="bg-carbon-fiber rounded-lg p-5 ring-1 ring-pure-white/10 shadow-lg border border-pure-white/5">
+                    <div className="card-premium-silver p-5">
                         <h3 className="text-sm font-bold text-highlight-silver mb-4 uppercase tracking-wider">Most Picked Teams</h3>
                         <SimpleBarChart data={stats.teams} />
                     </div>
-                    <div className="bg-carbon-fiber rounded-lg p-5 ring-1 ring-pure-white/10 shadow-lg border border-pure-white/5">
+                    <div className="card-premium-silver p-5">
                         <h3 className="text-sm font-bold text-highlight-silver mb-4 uppercase tracking-wider">Most Picked Drivers</h3>
                         <SimpleBarChart data={stats.drivers} />
                     </div>
-                    <div className="bg-carbon-fiber rounded-lg p-5 ring-1 ring-pure-white/10 shadow-lg border border-pure-white/5">
+                    <div className="card-premium-silver p-5">
                         <h3 className="text-sm font-bold text-highlight-silver mb-4 uppercase tracking-wider">Least Picked Teams</h3>
                         <SimpleBarChart data={stats.leastTeams} max={Math.max(...stats.teams.map(t => t.value), 1)} />
                     </div>
-                    <div className="bg-carbon-fiber rounded-lg p-5 ring-1 ring-pure-white/10 shadow-lg border border-pure-white/5">
+                    <div className="card-premium-silver p-5">
                         <h3 className="text-sm font-bold text-highlight-silver mb-4 uppercase tracking-wider">Least Picked Drivers</h3>
                         <SimpleBarChart data={stats.leastDrivers} max={Math.max(...stats.drivers.map(d => d.value), 1)} />
                     </div>
@@ -690,7 +712,7 @@ const InsightsView: React.FC<{
 
             {/* Dynamic Leaderboard Section */}
             <div key={activeCategory} className="md:flex-1 mb-8 pb-4 animate-fade-in">
-                <div className="bg-carbon-fiber rounded-xl p-4 md:p-6 ring-1 ring-pure-white/10 shadow-xl border border-pure-white/5 relative overflow-hidden transition-all duration-300">
+                <div className="card-premium p-4 md:p-6 transition-all duration-300">
                     <div className="flex justify-between items-center mb-6 relative z-10 border-b border-pure-white/5 pb-4">
                         <div>
                             <h3 className="text-lg md:text-xl font-bold text-pure-white leading-tight uppercase italic tracking-wider">
@@ -774,7 +796,7 @@ const P22View: React.FC<{ users: ProcessedUser[] }> = ({ users }) => {
 
     return (
         <div className="flex flex-col md:h-full animate-fade-in pb-24 md:pb-safe pt-2 md:overflow-y-auto custom-scrollbar pr-1">
-            <div className="bg-carbon-fiber rounded-xl p-6 ring-1 ring-pure-white/10 shadow-lg border border-pure-white/5 mb-8">
+            <div className="card-premium p-6 mb-8">
                 <div className="mb-6 border-b border-pure-white/10 pb-4 text-center">
                     <h2 className="text-2xl font-bold text-pure-white uppercase tracking-wider">The Wall of Shame</h2>
                     <p className="text-sm text-highlight-silver">Principals who picked the driver finishing P22 (Last Place) the most often.</p>
@@ -875,7 +897,7 @@ const EntityStatsView: React.FC<{ raceResults: RaceResults; pointsSystem: Points
 
     return (
         <div className="space-y-8 animate-fade-in pt-4 pb-24 md:pb-12 md:h-full md:overflow-y-auto custom-scrollbar px-1">
-            <div className="bg-carbon-fiber shadow-lg rounded-xl p-6 border border-pure-white/10">
+            <div className="card-premium p-6">
                 <div className="mb-8">
                     <h3 className="text-xl font-bold text-pure-white uppercase tracking-wider flex items-center gap-3">
                         <TeamIcon className="w-6 h-6 text-primary-red"/> Constructor Standings
@@ -886,26 +908,26 @@ const EntityStatsView: React.FC<{ raceResults: RaceResults; pointsSystem: Points
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-carbon-fiber rounded-xl p-6 border border-pure-white/10 shadow-lg">
+                <div className="card-premium-silver p-6">
                     <h3 className="text-sm font-bold text-highlight-silver uppercase tracking-widest mb-6 flex items-center gap-2">
                         <DriverIcon className="w-5 h-5 text-primary-red" /> Driver Top 10 (Overall)
                     </h3>
                     <SimpleBarChart data={stats.driversTotal} />
                 </div>
-                <div className="bg-carbon-fiber rounded-xl p-6 border border-pure-white/10 shadow-lg">
+                <div className="card-premium-silver p-6">
                     <h3 className="text-sm font-bold text-highlight-silver uppercase tracking-widest mb-6 flex items-center gap-2">
                         <PolePositionIcon className="w-5 h-5 text-blue-500" /> Qualifying Points
                     </h3>
                     <p className="text-[10px] text-highlight-silver/70 -mt-4 mb-4 ml-7">Includes GP Quali & Sprint Quali Scores</p>
                     <SimpleBarChart data={stats.driversQuali} />
                 </div>
-                <div className="bg-carbon-fiber rounded-xl p-6 border border-pure-white/10 shadow-lg">
+                <div className="card-premium-silver p-6">
                     <h3 className="text-sm font-bold text-highlight-silver uppercase tracking-widest mb-6 flex items-center gap-2">
                         <SprintIcon className="w-5 h-5 text-yellow-500" /> Sprint Specialists
                     </h3>
                     <SimpleBarChart data={stats.driversSprint} />
                 </div>
-                <div className="bg-carbon-fiber rounded-xl p-6 border border-pure-white/10 shadow-lg">
+                <div className="card-premium-silver p-6">
                     <h3 className="text-sm font-bold text-highlight-silver uppercase tracking-widest mb-6 flex items-center gap-2">
                         <FastestLapIcon className="w-5 h-5 text-purple-500" /> Fastest Lap Counts
                     </h3>

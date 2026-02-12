@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 interface PageHeaderProps {
@@ -11,7 +12,7 @@ interface PageHeaderProps {
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ title, icon: Icon, subtitle, rightAction, leftAction, onIconClick }) => {
     return (
-        <div className="w-full max-w-7xl mx-auto px-4 md:px-0 flex-none mb-4 md:mb-6 pt-4 md:pt-6">
+        <div className="w-full max-w-7xl mx-auto px-4 md:px-0 flex-none mb-4 md:mb-6 pt-4 md:pt-6 relative z-10">
             <div className="flex flex-col md:grid md:grid-cols-[1fr_auto_1fr] items-center gap-4 md:gap-0">
                 
                 {/* Left side column (Desktop only) */}
@@ -24,11 +25,11 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, icon: Icon, subti
                     <div className="flex items-center gap-3 mb-1">
                         <div 
                             onClick={onIconClick}
-                            className={`p-2 bg-primary-red/10 rounded-full border border-primary-red/20 shadow-[0_0_15px_rgba(218,41,28,0.2)] backdrop-blur-sm ${onIconClick ? 'pointer-events-auto cursor-pointer active:scale-95 transition-transform' : ''}`}
+                            className={`p-2 bg-primary-red/10 rounded-full border border-primary-red/20 shadow-[0_0_20px_rgba(218,41,28,0.25)] backdrop-blur-sm ${onIconClick ? 'pointer-events-auto cursor-pointer active:scale-95 transition-transform' : ''}`}
                         >
                             <Icon className="w-6 h-6 md:w-7 md:h-7 text-primary-red" />
                         </div>
-                        <h1 className="text-2xl md:text-3xl font-black uppercase italic tracking-wider text-pure-white drop-shadow-md whitespace-nowrap">
+                        <h1 className="text-2xl md:text-3xl font-black uppercase italic tracking-wider text-pure-white text-glow-red drop-shadow-md whitespace-nowrap">
                             {title}
                         </h1>
                     </div>
@@ -45,6 +46,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, icon: Icon, subti
                 </div>
 
             </div>
+            <div className="divider-gradient w-full mt-4 md:mt-6" />
         </div>
     );
 };

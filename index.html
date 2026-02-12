@@ -173,6 +173,221 @@
         left: 200%;
         transition: left 1s ease-in-out;
       }
+
+      /* ═══ DESIGN SYSTEM V2 — Atmospheric Upgrades ═══ */
+
+      /* Ambient background glow — applied to the main app container */
+      .ambient-glow {
+        position: relative;
+      }
+      .ambient-glow::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background:
+          radial-gradient(ellipse at 20% 30%, rgba(218, 41, 28, 0.025) 0%, transparent 50%),
+          radial-gradient(ellipse at 80% 70%, rgba(218, 41, 28, 0.015) 0%, transparent 50%);
+      }
+
+      /* Carbon texture overlay — subtler than carbon-fiber, for layering */
+      .carbon-texture::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.4;
+        background-image: repeating-linear-gradient(
+          45deg, transparent, transparent 2px,
+          rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 4px
+        );
+      }
+
+      /* Premium card — gradient top glow + sheen sweep */
+      .card-premium {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(218,41,28,0.04) 0%, rgba(17,17,17,0.95) 40%, rgba(17,17,17,0.98) 100%);
+        border: 1px solid rgba(218, 41, 28, 0.15);
+        border-radius: 16px;
+      }
+      .card-premium::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(218,41,28,0.5), transparent);
+        z-index: 3;
+      }
+      .card-premium::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.02), transparent);
+        transform: skewX(-15deg);
+        animation: sheenSweep 8s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Card variant: silver accent (non-active states) */
+      .card-premium-silver {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(17,17,17,0.95) 40%);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+      }
+      .card-premium-silver::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.015), transparent);
+        transform: skewX(-15deg);
+        animation: sheenSweep 10s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      /* Card variant: blue accent (Class B items) */
+      .card-premium-blue {
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(180deg, rgba(59,130,246,0.04) 0%, rgba(17,17,17,0.95) 40%);
+        border: 1px solid rgba(59, 130, 246, 0.15);
+        border-radius: 16px;
+      }
+
+      /* Pulsing red glow shadow — for active/highlighted cards */
+      .glow-pulse {
+        animation: glowPulse 4s ease-in-out infinite;
+      }
+
+      /* Interactive card hover lift */
+      .card-hover {
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      .card-hover:hover {
+        transform: translateY(-2px);
+        border-color: rgba(218, 41, 28, 0.3) !important;
+        box-shadow: 0 8px 32px rgba(218, 41, 28, 0.12);
+      }
+
+      /* Telemetry data row — for stats/metrics */
+      .telemetry-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Courier New', monospace;
+        font-size: 12px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 8px 12px;
+        background: rgba(255,255,255,0.015);
+        border-radius: 0 6px 6px 0;
+      }
+      .telemetry-label {
+        color: rgba(255,255,255,0.35);
+      }
+      .telemetry-value {
+        font-weight: 700;
+      }
+
+      /* Slow blink for live/active values */
+      .blink-slow {
+        animation: blinkSlow 2.5s ease-in-out infinite;
+      }
+
+      /* Staggered entrance animations */
+      .stagger-1 { animation: fadeInUp 0.5s ease-out 0.05s both; }
+      .stagger-2 { animation: fadeInUp 0.5s ease-out 0.1s both; }
+      .stagger-3 { animation: fadeInUp 0.5s ease-out 0.15s both; }
+      .stagger-4 { animation: fadeInUp 0.5s ease-out 0.2s both; }
+      .stagger-5 { animation: fadeInUp 0.5s ease-out 0.25s both; }
+      .stagger-6 { animation: fadeInUp 0.5s ease-out 0.3s both; }
+      .stagger-7 { animation: fadeInUp 0.5s ease-out 0.35s both; }
+      .stagger-8 { animation: fadeInUp 0.5s ease-out 0.4s both; }
+
+      /* Text glow — for important numbers/headings */
+      .text-glow-red {
+        text-shadow: 0 0 20px rgba(218, 41, 28, 0.4);
+      }
+      .text-glow-gold {
+        text-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+      }
+      .text-glow-silver {
+        text-shadow: 0 0 12px rgba(192, 192, 192, 0.3);
+      }
+      .text-glow-bronze {
+        text-shadow: 0 0 12px rgba(205, 127, 50, 0.3);
+      }
+
+      /* Icon glow container — for PageHeader icons, nav icons */
+      .icon-glow {
+        filter: drop-shadow(0 0 6px rgba(218, 41, 28, 0.5));
+      }
+
+      /* Gradient divider line */
+      .divider-gradient {
+        height: 1px;
+        background: linear-gradient(90deg, rgba(218,41,28,0.3), transparent);
+      }
+
+      /* Active nav indicator dot */
+      .nav-dot-active {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #DA291C;
+        box-shadow: 0 0 8px #DA291C;
+      }
+
+      /* Bottom nav active indicator bar */
+      .nav-bar-active {
+        width: 24px;
+        height: 3px;
+        border-radius: 2px;
+        background: #DA291C;
+        box-shadow: 0 0 10px rgba(218, 41, 28, 0.8);
+      }
+
+      /* Premium scrollbar */
+      .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: rgba(218, 41, 28, 0.25);
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: rgba(218, 41, 28, 0.4);
+      }
+
+      @keyframes sheenSweep {
+        0% { left: -100%; }
+        50% { left: 200%; }
+        100% { left: 200%; }
+      }
+
+      @keyframes glowPulse {
+        0%, 100% { box-shadow: 0 0 30px rgba(218, 41, 28, 0.08); }
+        50% { box-shadow: 0 0 50px rgba(218, 41, 28, 0.2); }
+      }
+
+      @keyframes blinkSlow {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.4; }
+      }
     </style>
     <!-- Use a specific stable version of Babel Standalone to reduce variable warnings -->
     <script src="https://unpkg.com/@babel/standalone@7.23.8/babel.min.js" crossorigin="anonymous"></script>
@@ -198,7 +413,7 @@
 }
 </script>
 </head>
-  <body class="bg-carbon-black text-ghost-white">
+  <body class="bg-carbon-black text-ghost-white ambient-glow carbon-texture">
     <div id="root"></div>
     <!-- 
       Note on Console Warnings:

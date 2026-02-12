@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { User, PickSelection, RaceResults, EntityClass, EventResult, PointsSystem, Driver, Constructor, Event } from '../types.ts';
 import useFantasyData from '../hooks/useFantasyData.ts';
@@ -52,6 +53,7 @@ const UsageMeter: React.FC<{ label: string; used: number; limit: number; color?:
   const percentage = limit > 0 ? (used / limit) * 100 : 0;
   const barColor = color || '#DA291C';
   const isMaxed = limit > 0 && used >= limit;
+  const isNearLimit = limit > 0 && used >= limit - 1;
 
   return (
     <div>
@@ -65,7 +67,12 @@ const UsageMeter: React.FC<{ label: string; used: number; limit: number; color?:
       <div className="w-full bg-carbon-black rounded-full h-2.5 ring-1 ring-pure-white/5 overflow-hidden">
         <div 
           className="h-2.5 rounded-full transition-all duration-500 relative" 
-          style={{ width: `${percentage}%`, backgroundColor: barColor, opacity: isMaxed ? 0.6 : 1 }}
+          style={{ 
+              width: `${percentage}%`, 
+              backgroundColor: barColor, 
+              opacity: isMaxed ? 0.6 : 1,
+              boxShadow: isNearLimit ? '0 0 8px rgba(218,41,28,0.4)' : 'none'
+          }}
         >
              <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent"></div>
         </div>
@@ -75,10 +82,10 @@ const UsageMeter: React.FC<{ label: string; used: number; limit: number; color?:
 };
 
 const InfoCard: React.FC<{ icon: any, label: string, value: string }> = ({ icon: Icon, label, value }) => (
-    <div className="flex flex-col items-center justify-center p-6 rounded-lg bg-black/20 w-full h-full min-h-[120px] border border-pure-white/5 shadow-inner">
+    <div className="card-premium-silver p-6 flex flex-col items-center justify-center h-full min-h-[120px]">
         <Icon className="w-8 h-8 text-primary-red mb-3 opacity-80" />
         <span className="text-xs font-bold uppercase text-highlight-silver mb-2 tracking-widest">{label}</span>
-        <span className="text-xl md:text-2xl font-black text-pure-white text-center break-words w-full px-2 leading-tight">{value}</span>
+        <span className="text-xl md:text-2xl font-black text-pure-white text-center break-words w-full px-2 leading-tight font-mono">{value}</span>
     </div>
 );
 
@@ -560,7 +567,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
              {usageEvents.length > 0 ? (
                 <ul className="space-y-2">
                     {usageEvents.map(e => (
-                        <li key={e.id} className="p-3 bg-carbon-black/50 rounded flex justify-between items-center border border-pure-white/5">
+                        <li key={e.id} className="telemetry-row rounded border border-pure-white/5">
                             <span className="font-semibold text-ghost-white">R{e.round}: {e.name}</span>
                             <span className="text-xs text-highlight-silver">{e.country}</span>
                         </li>
@@ -600,7 +607,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
       )}
 
       {/* Profile Info Section */}
-      <div className="bg-carbon-fiber rounded-lg p-6 ring-1 ring-pure-white/10 relative shadow-2xl">
+      <div className="card-premium p-6 shadow-2xl relative">
         {showTopSection && (
             <div className="flex flex-col items-center justify-center mb-8 relative z-10">
                 {/* Dues Status - Only show if Unpaid and Private View */}
@@ -720,10 +727,10 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
         ) : (
             isPublicView ? (
                 <div className="flex justify-center w-full">
-                    <div className="flex flex-col items-center justify-center p-6 rounded-lg bg-black/20 w-full max-w-md border border-pure-white/5 shadow-inner">
+                    <div className="card-premium-silver p-6 flex flex-col items-center justify-center w-full max-w-md">
                         <F1CarIcon className="w-8 h-8 text-primary-red mb-3 opacity-80" />
                         <span className="text-xs font-bold uppercase text-highlight-silver mb-2 tracking-widest">Team Name</span>
-                        <span className="text-2xl md:text-4xl font-black text-pure-white text-center break-words w-full px-2 leading-tight">{user.displayName}</span>
+                        <span className="text-2xl md:text-4xl font-black text-pure-white text-center break-words w-full px-2 leading-tight font-mono">{user.displayName}</span>
                     </div>
                 </div>
             ) : (
@@ -742,40 +749,40 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
             {/* Scoring Breakdown */}
             <div>
                 <h2 className="text-2xl font-bold mb-4 text-center">Scoring Breakdown</h2>
-                <div className="rounded-lg ring-1 ring-pure-white/10 overflow-hidden bg-carbon-fiber shadow-lg">
+                <div className="card-premium overflow-hidden shadow-lg">
                     <div className="grid grid-cols-2 divide-x divide-pure-white/10 bg-black/20 border-b border-pure-white/10">
                         <div className="p-6 text-center">
                             <p className="text-xs font-bold text-highlight-silver uppercase tracking-widest mb-2">Total Points</p>
-                            <p className="text-3xl md:text-4xl font-black text-pure-white">{scoreRollup.totalPoints}</p>
+                            <p className="text-3xl md:text-4xl font-black text-glow-red font-mono">{scoreRollup.totalPoints}</p>
                         </div>
                         <div className="p-6 text-center">
                             <p className="text-xs font-bold text-highlight-silver uppercase tracking-widest mb-2 flex items-center justify-center gap-1">
                                 <TrophyIcon className="w-3 h-3 text-primary-red" /> Championship Rank
                             </p>
-                            <p className="text-3xl md:text-4xl font-black text-pure-white">{globalRank ? `#${globalRank}` : '-'}</p>
+                            <p className="text-3xl md:text-4xl font-black text-pure-white font-mono">{globalRank ? `#${globalRank}` : '-'}</p>
                         </div>
                     </div>
                     <div className="p-6">
                         <div className="grid grid-cols-2 gap-4">
-                            <button onClick={() => handleScoringDetailClick('gp')} className="text-center p-2 rounded-lg hover:bg-pure-white/10 transition-colors duration-200">
-                                <CheckeredFlagIcon className="w-8 h-8 text-primary-red mb-2 mx-auto"/>
+                            <button onClick={() => handleScoringDetailClick('gp')} className="text-center p-2 rounded-lg hover:bg-pure-white/10 transition-colors duration-200 group">
+                                <CheckeredFlagIcon className="w-8 h-8 text-primary-red mb-2 mx-auto group-hover:scale-110 transition-transform"/>
                                 <p className="text-sm text-highlight-silver">Grand Prix</p>
-                                <p className="font-bold text-2xl text-pure-white">{scoreRollup.grandPrixPoints}</p>
+                                <p className="font-bold text-2xl text-pure-white font-mono">{scoreRollup.grandPrixPoints}</p>
                             </button>
-                            <button onClick={() => handleScoringDetailClick('sprint')} className="text-center p-2 rounded-lg hover:bg-pure-white/10 transition-colors duration-200">
-                                <SprintIcon className="w-8 h-8 text-primary-red mb-2 mx-auto"/>
+                            <button onClick={() => handleScoringDetailClick('sprint')} className="text-center p-2 rounded-lg hover:bg-pure-white/10 transition-colors duration-200 group">
+                                <SprintIcon className="w-8 h-8 text-primary-red mb-2 mx-auto group-hover:scale-110 transition-transform"/>
                                 <p className="text-sm text-highlight-silver">Sprint Race</p>
-                                <p className="font-bold text-2xl text-pure-white">{scoreRollup.sprintPoints}</p>
+                                <p className="font-bold text-2xl text-pure-white font-mono">{scoreRollup.sprintPoints}</p>
                             </button>
-                            <button onClick={() => handleScoringDetailClick('fl')} className="text-center p-2 rounded-lg hover:bg-pure-white/10 transition-colors duration-200">
-                                <FastestLapIcon className="w-8 h-8 text-primary-red mb-2 mx-auto"/>
+                            <button onClick={() => handleScoringDetailClick('fl')} className="text-center p-2 rounded-lg hover:bg-pure-white/10 transition-colors duration-200 group">
+                                <FastestLapIcon className="w-8 h-8 text-primary-red mb-2 mx-auto group-hover:scale-110 transition-transform"/>
                                 <p className="text-sm text-highlight-silver">Fastest Lap</p>
-                                <p className="font-bold text-2xl text-pure-white">{scoreRollup.fastestLapPoints}</p>
+                                <p className="font-bold text-2xl text-pure-white font-mono">{scoreRollup.fastestLapPoints}</p>
                             </button>
-                            <button onClick={() => handleScoringDetailClick('quali')} className="text-center p-2 rounded-lg hover:bg-pure-white/10 transition-colors duration-200">
-                                <LeaderboardIcon className="w-8 h-8 text-primary-red mb-2 mx-auto"/>
+                            <button onClick={() => handleScoringDetailClick('quali')} className="text-center p-2 rounded-lg hover:bg-pure-white/10 transition-colors duration-200 group">
+                                <LeaderboardIcon className="w-8 h-8 text-primary-red mb-2 mx-auto group-hover:scale-110 transition-transform"/>
                                 <p className="text-sm text-highlight-silver">GP Quali</p>
-                                <p className="font-bold text-2xl text-pure-white">{scoreRollup.gpQualifyingPoints}</p>
+                                <p className="font-bold text-2xl text-pure-white font-mono">{scoreRollup.gpQualifyingPoints}</p>
                             </button>
                         </div>
                     </div>
@@ -785,7 +792,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
             {/* Selection Counts */}
             <div>
                 <h2 className="text-2xl font-bold mb-4 text-center">Selection Counts</h2>
-                <div className="rounded-lg p-6 ring-1 ring-pure-white/10 bg-carbon-fiber shadow-lg">
+                <div className="card-premium p-6 shadow-lg">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                         <CollapsibleUsageList
                             title="Class A Teams"
@@ -823,9 +830,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
         {/* Right Column: Picks History */}
         <div>
             <h2 className="text-2xl font-bold mb-4 text-center">Picks & Points History</h2>
-            <div className="space-y-2">
+            <div className="space-y-4">
                 {!hasHistory && (
-                    <div className="bg-carbon-fiber rounded-lg p-8 ring-1 ring-pure-white/10 text-center flex flex-col items-center justify-center min-h-[250px] shadow-lg animate-fade-in">
+                    <div className="card-premium p-8 text-center flex flex-col items-center justify-center min-h-[250px] shadow-lg animate-fade-in">
                         <div className="bg-carbon-black p-4 rounded-full mb-4 border border-pure-white/10 shadow-inner">
                             <PicksIcon className="w-12 h-12 text-highlight-silver/30" />
                         </div>
@@ -846,7 +853,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
                     const rawPoints = eventPoints.totalPoints + (eventPoints.penaltyPoints || 0);
 
                     return (
-                        <div key={event.id} className="relative rounded-lg ring-1 ring-pure-white/10 overflow-hidden bg-carbon-fiber shadow-lg">
+                        <div key={event.id} className="relative card-premium-silver overflow-hidden shadow-lg transition-all duration-300">
                              {hasPenalty && (
                                 <div className="absolute top-2 left-1/2 transform -translate-x-1/2 -rotate-6 border-4 border-red-500 text-red-500 font-black text-xl px-4 py-1 opacity-80 pointer-events-none z-10 whitespace-nowrap">
                                     PENALTY APPLIED (-{(picks.penalty! * 100).toFixed(0)}%)
@@ -859,7 +866,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
                                 </div>
                                 <div className="flex items-center gap-4">
                                     <div className="text-right">
-                                        <span className="font-bold text-xl block">{eventPoints.totalPoints} PTS</span>
+                                        <span className="font-bold text-xl block font-mono text-glow-pure-white">{eventPoints.totalPoints} PTS</span>
                                         {hasPenalty && <span className="text-xs text-red-400 block font-bold">Adjusted</span>}
                                     </div>
                                     <ChevronDownIcon className={`w-6 h-6 transition-transform ${isExpanded ? 'rotate-180' : ''}`} />
@@ -867,25 +874,30 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
                             </button>
                             {isExpanded && (
                                 <div className="p-4 border-t border-accent-gray/50 text-sm bg-black/20">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <h4 className="font-bold text-primary-red mb-2">Teams</h4>
-                                            <p>A: {getEntityName(picks.aTeams[0])}, {getEntityName(picks.aTeams[1])}</p>
-                                            <p>B: {getEntityName(picks.bTeam)}</p>
+                                    <div className="space-y-2 mb-4">
+                                        <div className="telemetry-row rounded border border-pure-white/5">
+                                            <span className="font-bold text-primary-red">Teams</span>
+                                            <div className="text-right">
+                                                <span className="block">{getEntityName(picks.aTeams[0])}, {getEntityName(picks.aTeams[1])}</span>
+                                                <span className="block text-highlight-silver">{getEntityName(picks.bTeam)} (Class B)</span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <h4 className="font-bold text-primary-red mb-2">Drivers</h4>
-                                            <p>A: {getEntityName(picks.aDrivers[0])}, {getEntityName(picks.aDrivers[1])}, {getEntityName(picks.aDrivers[2])}</p>
-                                            <p>B: {getEntityName(picks.bDrivers[0])}, {getEntityName(picks.bDrivers[1])}</p>
+                                        <div className="telemetry-row rounded border border-pure-white/5">
+                                            <span className="font-bold text-primary-red">Drivers</span>
+                                            <div className="text-right">
+                                                <span className="block">{getEntityName(picks.aDrivers[0])}, {getEntityName(picks.aDrivers[1])}, {getEntityName(picks.aDrivers[2])}</span>
+                                                <span className="block text-highlight-silver">{getEntityName(picks.bDrivers[0])}, {getEntityName(picks.bDrivers[1])} (Class B)</span>
+                                            </div>
                                         </div>
-                                        <div className="md:col-span-2">
-                                            <h4 className="font-bold text-primary-red mb-2">Fastest Lap</h4>
-                                            <p>{getEntityName(picks.fastestLap)}</p>
+                                        <div className="telemetry-row rounded border border-pure-white/5">
+                                            <span className="font-bold text-primary-red">Fastest Lap</span>
+                                            <span className="text-right">{getEntityName(picks.fastestLap)}</span>
                                         </div>
                                     </div>
+
                                     {results && (
                                         <div className="mt-4 pt-4 border-t border-accent-gray/50">
-                                            <h4 className="font-bold text-lg mb-2 text-center">Points Breakdown</h4>
+                                            <h4 className="font-bold text-lg mb-2 text-center uppercase tracking-wider text-highlight-silver text-xs">Points Breakdown</h4>
                                             <div className="flex justify-around flex-wrap gap-4 mb-4">
                                                 <button onClick={() => handleEventScoringDetailClick(event.id, 'gp')} className="transition-transform transform hover:scale-105">
                                                     <PointChip icon={CheckeredFlagIcon} label="GP Finish" points={eventPoints.grandPrixPoints} />
@@ -962,10 +974,10 @@ interface PointChipProps {
     points?: number;
 }
 const PointChip: React.FC<PointChipProps> = ({ icon: Icon, label, points = 0 }) => (
-    <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-carbon-black/50 w-28 h-full">
+    <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-carbon-black/50 w-28 h-full border border-pure-white/5">
         <Icon className="w-6 h-6 text-highlight-silver mb-1"/>
         <span className="text-xs text-highlight-silver">{label}</span>
-        <span className="font-bold text-lg text-pure-white">{points}</span>
+        <span className="font-bold text-lg text-pure-white font-mono">{points}</span>
     </div>
 );
 

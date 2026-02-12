@@ -70,14 +70,15 @@ const SideNavItem: React.FC<SideNavItemProps> = ({ icon: Icon, label, page, acti
   return (
     <button
       onClick={() => setActivePage(page)}
-      className={`flex items-center gap-4 px-3 py-3 rounded-lg transition-colors duration-200 w-full text-left ${
+      className={`flex items-center gap-4 px-4 py-3 rounded-r-lg transition-all duration-200 w-full text-left border-l-[3px] group relative ${
         isActive
-          ? 'bg-accent-gray text-pure-white font-semibold'
-          : 'text-highlight-silver hover:bg-accent-gray/50 hover:text-pure-white'
+          ? 'border-primary-red bg-gradient-to-r from-primary-red/10 to-transparent text-pure-white font-semibold'
+          : 'border-transparent text-highlight-silver hover:bg-primary-red/[0.04] hover:text-pure-white'
       }`}
     >
-      <Icon className={`w-8 h-8 flex-shrink-0 ${isActive ? 'text-primary-red' : ''}`} />
-      <span className="text-base font-medium">{label}</span>
+      <Icon className={`w-6 h-6 flex-shrink-0 transition-all ${isActive ? 'text-primary-red icon-glow' : 'group-hover:text-primary-red/80'}`} />
+      <span className="text-sm md:text-base font-medium flex-1">{label}</span>
+      {isActive && <div className="nav-dot-active" />}
     </button>
   );
 };
@@ -111,9 +112,12 @@ const SideNav: React.FC<{ user: User | null; activePage: Page; navigateToPage: (
     }, []);
 
     return (
-        <aside className="hidden md:flex flex-col w-72 bg-carbon-black border-r border-accent-gray p-4 flex-shrink-0 h-screen overflow-y-auto custom-scrollbar">
+        <aside className="hidden md:flex flex-col w-72 bg-carbon-black border-r border-accent-gray p-4 flex-shrink-0 h-screen overflow-y-auto custom-scrollbar relative z-20">
+            {/* Top Red Gradient Overlay */}
+            <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-primary-red/[0.03] to-transparent pointer-events-none" />
+
             {/* Header / User Dropdown */}
-            <div className="relative mb-4" ref={dropdownRef}>
+            <div className="relative mb-4 z-10" ref={dropdownRef}>
                 <button 
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     className={`flex items-center gap-3 w-full p-2 rounded-xl transition-all duration-200 border ${
@@ -167,7 +171,7 @@ const SideNav: React.FC<{ user: User | null; activePage: Page; navigateToPage: (
                 )}
             </div>
 
-            <nav className="flex-grow space-y-1">
+            <nav className="flex-grow space-y-1 relative z-10">
                 <SideNavItem icon={HomeIcon} label="Home" page="home" activePage={activePage} setActivePage={navigateToPage} />
                 <SideNavItem icon={ProfileIcon} label="Profile" page="profile" activePage={activePage} setActivePage={navigateToPage} />
                 <SideNavItem icon={PicksIcon} label="GP Picks" page="picks" activePage={activePage} setActivePage={navigateToPage} />
@@ -188,7 +192,7 @@ const SideNav: React.FC<{ user: User | null; activePage: Page; navigateToPage: (
                 )}
             </nav>
              
-             <div className="mt-auto flex-shrink-0 pt-4 pb-2">
+             <div className="mt-auto flex-shrink-0 pt-4 pb-2 relative z-10">
                  {/* Copyright Section - Moved Here for Desktop Persistence */}
                  <div className="text-center opacity-30 pb-4">
                     <F1CarIcon className="w-8 h-8 mx-auto mb-2 text-pure-white" />
@@ -689,10 +693,10 @@ const App: React.FC = () => {
   }
 
   const appContent = (
-    <div className="fixed inset-0 bg-carbon-black text-ghost-white flex flex-col md:flex-row overflow-hidden">
+    <div className="fixed inset-0 bg-carbon-black text-ghost-white flex flex-col md:flex-row overflow-hidden ambient-glow carbon-texture">
       <SideNav user={user} activePage={activePage} navigateToPage={navigateToPage} handleLogout={handleLogout} livePoints={currentTotalPoints} />
       
-      <div className="flex-1 flex flex-col h-full relative overflow-hidden">
+      <div className="flex-1 flex flex-col h-full relative overflow-hidden z-10">
         
         {/* Admin Maintenance Banner */}
         {maintenance?.enabled && user?.isAdmin && (
@@ -740,7 +744,7 @@ const App: React.FC = () => {
             </main>
         </div>
 
-        <nav className={`absolute bottom-0 left-0 right-0 bg-carbon-black/90 backdrop-blur-lg border-t border-accent-gray/50 grid ${isUserAdmin(user) ? 'grid-cols-6' : 'grid-cols-5'} md:hidden z-50 pb-safe`}>
+        <nav className={`absolute bottom-0 left-0 right-0 bg-carbon-black/90 backdrop-blur-xl border-t border-primary-red/15 grid ${isUserAdmin(user) ? 'grid-cols-6' : 'grid-cols-5'} md:hidden z-50 pb-safe`}>
             <NavItem icon={HomeIcon} label="Home" page="home" activePage={activePage} setActivePage={navigateToPage} />
             <NavItem icon={ProfileIcon} label="Profile" page="profile" activePage={activePage} setActivePage={navigateToPage} />
             <NavItem icon={PicksIcon} label="Picks" page="picks" activePage={activePage} setActivePage={navigateToPage} />
@@ -844,9 +848,10 @@ const NavItem: React.FC<NavItemProps> = ({ icon: Icon, label, page, activePage, 
   return (
     <button
       onClick={() => setActivePage(page)}
-      className={`flex flex-col items-center justify-center w-full pt-3 pb-2 transition-colors duration-200 active:scale-95 ${isActive ? 'text-primary-red' : 'text-highlight-silver hover:text-pure-white'}`}
+      className={`relative flex flex-col items-center justify-center w-full pt-3 pb-2 transition-all duration-200 active:scale-95 ${isActive ? 'text-primary-red font-bold' : 'text-pure-white/30 hover:text-pure-white'}`}
     >
-      <Icon className="w-6 h-6 mb-1" />
+      {isActive && <div className="nav-bar-active absolute top-0" />}
+      <Icon className={`w-6 h-6 mb-1 transition-all ${isActive ? 'icon-glow' : ''}`} />
       <span className="text-[10px] font-medium tracking-tight">{label}</span>
     </button>
   );
