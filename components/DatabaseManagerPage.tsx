@@ -240,7 +240,7 @@ const DatabaseManagerPage: React.FC<DatabaseManagerPageProps> = ({ setAdminSubPa
             <div className="flex-1 flex flex-col min-h-0 px-2 md:px-0 pb-0 md:pb-8">
                 
                 {/* Main: Document List */}
-                <div className="flex-1 bg-carbon-fiber rounded-xl border border-pure-white/10 shadow-xl overflow-hidden flex flex-col min-h-0">
+                <div className="flex-1 card-premium rounded-xl border border-pure-white/10 shadow-xl overflow-hidden flex flex-col min-h-0">
                     {/* Unified Header with Dropdown */}
                     <div className="p-3 md:p-4 border-b border-pure-white/10 bg-carbon-black/50 flex justify-between items-center flex-none gap-3">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
@@ -299,7 +299,7 @@ const DatabaseManagerPage: React.FC<DatabaseManagerPageProps> = ({ setAdminSubPa
                                         <div 
                                             key={doc.id}
                                             onClick={() => openEditor(doc)}
-                                            className="group relative flex flex-col md:grid md:grid-cols-12 md:gap-4 p-4 md:p-3 rounded-lg md:rounded-none md:border-b border-pure-white/10 bg-carbon-fiber md:bg-transparent hover:bg-pure-white/5 transition-all cursor-pointer border border-pure-white/5 md:border-x-0 md:border-t-0 shadow-md md:shadow-none animate-fade-in"
+                                            className="group relative flex flex-col md:grid md:grid-cols-12 md:gap-4 p-4 md:p-3 rounded-lg md:rounded-none md:border-b border-pure-white/10 bg-carbon-black md:bg-transparent hover:bg-pure-white/5 transition-all cursor-pointer border border-pure-white/5 md:border-x-0 md:border-t-0 shadow-md md:shadow-none animate-fade-in"
                                         >
                                             {/* ID Column */}
                                             <div className="md:col-span-3 flex items-center justify-between md:block mb-2 md:mb-0">
@@ -351,7 +351,7 @@ const DatabaseManagerPage: React.FC<DatabaseManagerPageProps> = ({ setAdminSubPa
             {/* JSON Editor Modal (Full Screen on Mobile) */}
             {selectedDoc && (
                 <div className="fixed inset-0 z-[150] flex items-center justify-center bg-carbon-black/95 backdrop-blur-md p-0 md:p-4 animate-fade-in" onClick={closeEditor}>
-                    <div className="bg-carbon-fiber md:border border-pure-white/10 rounded-none md:rounded-xl w-full md:w-[95vw] md:max-w-[1600px] h-full md:h-[90vh] flex flex-col shadow-2xl animate-scale-in" onClick={e => e.stopPropagation()}>
+                    <div className="card-premium md:border border-pure-white/10 rounded-none md:rounded-xl w-full md:w-[95vw] md:max-w-[1600px] h-full md:h-[90vh] flex flex-col shadow-2xl animate-scale-in" onClick={e => e.stopPropagation()}>
                         
                         {/* Header */}
                         <div className="p-4 border-b border-pure-white/10 bg-carbon-black/80 flex flex-row justify-between items-center gap-3 shrink-0 pb-safe-top">

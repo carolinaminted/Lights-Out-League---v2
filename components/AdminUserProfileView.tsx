@@ -124,7 +124,7 @@ const AdminUserProfileView: React.FC<AdminUserProfileViewProps> = ({ targetUser,
     return (
         <div>
             {/* Admin Management Panel */}
-            <div className="bg-carbon-fiber border border-pure-white/10 rounded-xl p-6 mb-6 space-y-6 shadow-xl">
+            <div className="card-premium border border-pure-white/10 rounded-xl p-6 mb-6 space-y-6 shadow-xl">
                 <h3 className="font-bold text-pure-white text-xl border-b border-pure-white/10 pb-4 flex items-center gap-2">
                     <AdminIcon className="w-6 h-6 text-primary-red" />
                     Account Management
@@ -256,7 +256,7 @@ const AdminUserProfileView: React.FC<AdminUserProfileViewProps> = ({ targetUser,
             {/* Purge Confirmation Modal */}
             {showPurgeModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-carbon-black/90 backdrop-blur-sm p-4 animate-fade-in" onClick={() => !isPurging && setShowPurgeModal(false)}>
-                    <div className="bg-carbon-fiber border border-red-500 rounded-xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl shadow-red-900/50 ring-1 ring-red-500/30 animate-scale-in" onClick={e => e.stopPropagation()}>
+                    <div className="card-premium border border-red-500 rounded-xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl shadow-red-900/50 ring-1 ring-red-500/30 animate-scale-in" onClick={e => e.stopPropagation()}>
                         <div className="w-16 h-16 bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/50">
                             <TrashIcon className="w-8 h-8 text-red-500" />
                         </div>

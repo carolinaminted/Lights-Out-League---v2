@@ -186,7 +186,7 @@ const ManageEntitiesPage: React.FC<ManageEntitiesPageProps> = ({ setAdminSubPage
             />
             
             <div className="flex-1 md:overflow-hidden px-4 md:px-1 pb-8 flex flex-col">
-                <div className={`bg-carbon-fiber rounded-lg border border-pure-white/10 shadow-lg md:overflow-hidden flex flex-col md:flex-1 transition-opacity ${isSaving ? 'opacity-60 cursor-wait' : ''}`}>
+                <div className={`card-premium rounded-lg border border-pure-white/10 shadow-lg md:overflow-hidden flex flex-col md:flex-1 transition-opacity ${isSaving ? 'opacity-60 cursor-wait' : ''}`}>
                     <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-carbon-black/50 border-b border-pure-white/10 flex-shrink-0">
                         <h2 className="text-xl font-bold">{activeTab === 'drivers' ? 'Driver Roster' : 'Constructor List'}</h2>
                         
@@ -302,7 +302,7 @@ const ManageEntitiesPage: React.FC<ManageEntitiesPageProps> = ({ setAdminSubPage
             {/* Modal */}
             {showModal && (
                 <div className="fixed inset-0 bg-carbon-black/80 flex items-center justify-center z-50 p-4">
-                    <div className="bg-carbon-fiber rounded-lg max-w-md w-full p-6 ring-1 ring-pure-white/20 max-h-[90vh] overflow-y-auto shadow-2xl border border-pure-white/10">
+                    <div className="card-premium rounded-lg max-w-md w-full p-6 ring-1 ring-pure-white/20 max-h-[90vh] overflow-y-auto shadow-2xl border border-pure-white/10">
                         <h3 className="text-2xl font-bold mb-4">{editEntityId ? 'Edit Entity' : 'Add New Entity'}</h3>
                         <form onSubmit={handleFormSubmit} className="space-y-4">
                             <div>

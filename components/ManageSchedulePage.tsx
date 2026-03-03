@@ -136,7 +136,7 @@ const ManageSchedulePage: React.FC<ManageSchedulePageProps> = ({ setAdminSubPage
             {/* Bulk Importer Modal */}
             {showImporter && (
                 <div className="fixed inset-0 z-[110] flex items-center justify-center bg-carbon-black/90 backdrop-blur-md p-4 animate-fade-in" onClick={() => setShowImporter(false)}>
-                    <div className="bg-carbon-fiber rounded-xl border border-pure-white/10 shadow-2xl w-full max-w-2xl p-6 flex flex-col gap-4 animate-scale-in" onClick={e => e.stopPropagation()}>
+                    <div className="card-premium rounded-xl border border-pure-white/10 shadow-2xl w-full max-w-2xl p-6 flex flex-col gap-4 animate-scale-in" onClick={e => e.stopPropagation()}>
                         <div className="flex justify-between items-center">
                             <h2 className="text-xl font-bold flex items-center gap-2">
                                 <DownloadIcon className="w-5 h-5 text-primary-red" />
@@ -266,7 +266,7 @@ const ScheduleEditorModal: React.FC<ScheduleEditorModalProps> = ({ event, schedu
 
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-carbon-black/80 backdrop-blur-sm p-4 animate-fade-in" onClick={onClose}>
-            <div className="bg-carbon-fiber rounded-xl border border-pure-white/10 shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-scale-in" onClick={e => e.stopPropagation()}>
+            <div className="card-premium rounded-xl border border-pure-white/10 shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-scale-in" onClick={e => e.stopPropagation()}>
                 <div className="flex items-center justify-between p-5 border-b border-pure-white/10 bg-carbon-black/50">
                     <div>
                         <h2 className="text-xl font-bold text-pure-white flex items-center gap-2">
@@ -309,7 +309,10 @@ const ScheduleEditorModal: React.FC<ScheduleEditorModalProps> = ({ event, schedu
                     </div>
 
                     <div className="space-y-4 pt-4 border-t border-pure-white/10">
-                        <h3 className="text-sm font-bold text-pure-white uppercase tracking-wider mb-2">Session Timetable <span className="text-primary-red">(EST)</span></h3>
+                        <h3 className="text-sm font-black text-pure-white uppercase tracking-[0.2em] mb-2 flex items-center gap-2">
+                            Session Timetable
+                            <span className="text-[10px] font-bold text-primary-red bg-primary-red/10 px-2 py-0.5 rounded border border-primary-red/20">EST / EDT</span>
+                        </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 bg-carbon-black/30 p-4 rounded-xl border border-pure-white/5">
                             <TimeInput label="Practice 1" value={getValue(formState.fp1)} onChange={v => handleInputChange('fp1', v)} />
                             {isSprint ? (
@@ -348,6 +351,11 @@ const ScheduleEditorModal: React.FC<ScheduleEditorModalProps> = ({ event, schedu
 
 const TimeInput: React.FC<{ label: string; value: string; onChange: (val: string) => void; highlightColor?: string }> = ({ label, value, onChange, highlightColor }) => (
     <div className="flex flex-col">
+        <style>{`
+            input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+                filter: invert(27%) sepia(95%) saturate(7480%) hue-rotate(357deg) brightness(95%) contrast(118%);
+            }
+        `}</style>
         <label className={`text-[10px] font-bold uppercase mb-1.5 ${highlightColor ? highlightColor.split(' ')[0] : 'text-highlight-silver'}`}>{label}</label>
         <input 
             type="datetime-local" 

@@ -148,7 +148,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ setAdminSubPage }) => {
             
             <div className="pb-20 md:pb-12 px-2">
                 {/* Race Control Panel (Maintenance) */}
-                <div className={`mb-6 p-4 rounded-xl border ${maintenance?.enabled ? 'bg-red-900/10 border-primary-red/50' : 'bg-carbon-fiber border-pure-white/10'} shadow-lg transition-colors`}>
+                <div className={`mb-6 p-4 rounded-xl border ${maintenance?.enabled ? 'bg-red-900/10 border-primary-red/50' : 'card-premium border-pure-white/10'} shadow-lg transition-colors`}>
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                         <div className="flex items-center gap-4">
                             <div className={`p-3 rounded-full ${maintenance?.enabled ? 'bg-primary-red text-white animate-pulse' : 'bg-carbon-black text-highlight-silver border border-pure-white/10'}`}>
@@ -241,7 +241,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ setAdminSubPage }) => {
             {/* Dues Management Modal */}
             {showDuesModal && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-carbon-black/90 backdrop-blur-md p-4 animate-fade-in" onClick={() => !isSavingDues && setShowDuesModal(false)}>
-                    <div className="bg-carbon-fiber border border-green-500/30 rounded-xl p-8 max-w-sm w-full shadow-[0_0_50px_rgba(34,197,94,0.1)] ring-1 ring-pure-white/10 animate-scale-in" onClick={e => e.stopPropagation()}>
+                    <div className="card-premium border border-green-500/30 rounded-xl p-8 max-w-sm w-full shadow-[0_0_50px_rgba(34,197,94,0.1)] ring-1 ring-pure-white/10 animate-scale-in" onClick={e => e.stopPropagation()}>
                         <div className="w-16 h-16 bg-green-600/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-green-500/30">
                             <DuesIcon className="w-8 h-8 text-green-500" />
                         </div>
@@ -338,7 +338,7 @@ const AdminTile: React.FC<AdminTileProps> = ({ icon: Icon, title, subtitle, desc
   return (
     <button
         onClick={onClick}
-        className="group relative overflow-hidden rounded-xl p-6 text-left border border-pure-white/10 hover:border-primary-red/50 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col w-full min-h-[220px] bg-carbon-fiber animate-fade-in-up"
+        className="group relative rounded-xl p-6 text-left border border-pure-white/10 hover:border-primary-red/50 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col w-full min-h-[220px] card-premium animate-fade-in-up"
         style={{ animationDelay: delay }}
     >
         {/* Background Icon (Huge & Faded) */}

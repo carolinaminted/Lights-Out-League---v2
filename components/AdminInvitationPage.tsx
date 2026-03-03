@@ -224,7 +224,7 @@ const AdminInvitationPage: React.FC<AdminInvitationPageProps> = ({ setAdminSubPa
 
             <div className="flex-1 flex flex-col min-h-0 px-2 md:px-0 pb-8">
                 {/* Controls - Fixed Height */}
-                <div className="bg-carbon-fiber/50 backdrop-blur-sm rounded-lg p-4 border border-pure-white/10 mb-6 flex flex-col md:flex-row gap-6 justify-between items-center shadow-lg flex-none ring-1 ring-pure-white/5">
+                <div className="card-premium backdrop-blur-sm rounded-lg p-4 border border-pure-white/10 mb-6 flex flex-col md:flex-row gap-6 justify-between items-center shadow-lg flex-none ring-1 ring-pure-white/5">
                     <div className="flex bg-carbon-black rounded-lg p-1 border border-pure-white/10">
                         {(['all', 'active', 'used'] as const).map(f => (
                             <button 
@@ -260,7 +260,7 @@ const AdminInvitationPage: React.FC<AdminInvitationPageProps> = ({ setAdminSubPa
 
                 {/* List Container - Takes Remaining Space */}
                 {isLoading ? <div className="flex-1"><ListSkeleton /></div> : (
-                    <div className="bg-carbon-fiber rounded-xl border border-pure-white/10 shadow-2xl flex flex-col flex-1 min-h-0 overflow-hidden ring-1 ring-pure-white/5">
+                    <div className="card-premium rounded-xl border border-pure-white/10 shadow-2xl flex flex-col flex-1 min-h-0 overflow-hidden ring-1 ring-pure-white/5">
                         <div className="overflow-y-auto custom-scrollbar flex-1">
                             <table className="w-full text-left border-collapse">
                                 <thead className="bg-carbon-black/80 sticky top-0 z-10 backdrop-blur-md border-b border-pure-white/10">
@@ -315,7 +315,7 @@ const AdminInvitationPage: React.FC<AdminInvitationPageProps> = ({ setAdminSubPa
             {/* Code Detail Modal */}
             {selectedCodeObj && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center bg-carbon-black/90 backdrop-blur-md p-4 animate-fade-in" onClick={() => !isDeleting && setSelectedCodeObj(null)}>
-                    <div className="bg-carbon-fiber border border-pure-white/10 rounded-xl p-8 max-w-sm w-full text-center shadow-2xl ring-1 ring-pure-white/10 animate-scale-in" onClick={e => e.stopPropagation()}>
+                    <div className="card-premium border border-pure-white/10 rounded-xl p-8 max-w-sm w-full text-center shadow-2xl ring-1 ring-pure-white/10 animate-scale-in" onClick={e => e.stopPropagation()}>
                         
                         <div className="w-16 h-16 bg-pure-white/5 rounded-full flex items-center justify-center mx-auto mb-4 border border-pure-white/10">
                             <TicketIcon className="w-8 h-8 text-pure-white" />

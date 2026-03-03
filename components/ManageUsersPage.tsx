@@ -114,7 +114,7 @@ const ManageUsersPage: React.FC<ManageUsersPageProps> = ({ setAdminSubPage, race
                 </div>
             ) : (
                 <div className="flex-1 md:overflow-hidden px-4 md:px-1 pb-8 flex flex-col">
-                    <div className="bg-carbon-fiber rounded-lg border border-pure-white/10 shadow-lg md:overflow-hidden flex flex-col md:flex-1">
+                    <div className="card-premium rounded-lg border border-pure-white/10 shadow-lg md:overflow-hidden flex flex-col md:flex-1">
                         
                         {/* Card Header with Search and Toggles */}
                         <div className="p-4 flex flex-col md:flex-row justify-between items-center gap-4 bg-carbon-black/50 border-b border-pure-white/10 flex-shrink-0">
