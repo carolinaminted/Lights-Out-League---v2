@@ -180,7 +180,7 @@ const ScoringSettingsPage: React.FC<ScoringSettingsPageProps> = ({ settings, set
             
             <div className="px-4 md:px-0 space-y-6">
                 {/* Main Profile Control Card */}
-                <div className="bg-carbon-fiber rounded-2xl border border-pure-white/10 p-6 shadow-2xl relative">
+                <div className="card-premium border border-pure-white/10 p-6 shadow-2xl relative">
                     
                     {/* Row 1: Dropdown and Action Buttons */}
                     <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-3 relative z-30">
@@ -242,7 +242,7 @@ const ScoringSettingsPage: React.FC<ScoringSettingsPageProps> = ({ settings, set
                         
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                             {/* Profile Name Field */}
-                            <div className="bg-carbon-fiber rounded-2xl border border-pure-white/10 p-6 shadow-xl flex flex-col h-full">
+                            <div className="card-premium border border-pure-white/10 p-6 shadow-xl flex flex-col h-full">
                                 <div className="flex justify-between items-start mb-3">
                                     <label className="block text-[10px] font-black uppercase text-highlight-silver tracking-[0.2em]">Profile Name</label>
                                     {!isActiveProfile && (
@@ -269,7 +269,7 @@ const ScoringSettingsPage: React.FC<ScoringSettingsPageProps> = ({ settings, set
                             </div>
 
                             {/* Fastest Lap Field */}
-                            <div className="bg-carbon-fiber rounded-2xl border border-pure-white/10 p-6 shadow-xl flex flex-col h-full">
+                            <div className="card-premium border border-pure-white/10 p-6 shadow-xl flex flex-col h-full">
                                 <label className="block text-[10px] font-black uppercase text-highlight-silver mb-4 tracking-[0.2em]">Fastest Lap Bonus</label>
                                 <div className="flex-grow flex items-center">
                                     <div className="flex items-center gap-4 max-w-sm w-full">
@@ -406,7 +406,7 @@ const PointArraySection: React.FC<{
     colorClass?: string;
     disabled?: boolean;
 }> = ({ title, subtitle, values, onChange, colorClass = "text-pure-white", disabled }) => (
-    <div className={`bg-carbon-fiber rounded-2xl p-5 border border-pure-white/10 shadow-lg relative overflow-hidden group ${disabled ? 'opacity-50' : ''}`}>
+    <div className={`card-premium p-5 border border-pure-white/10 shadow-lg relative overflow-hidden group ${disabled ? 'opacity-50' : ''}`}>
         <div className="absolute inset-0 bg-gradient-to-br from-pure-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
         <div className="flex justify-between items-baseline mb-4 relative z-10">
             <h3 className={`font-black text-xs uppercase tracking-widest ${colorClass}`}>{title}</h3>

@@ -102,7 +102,7 @@ const HubTile: React.FC<{
     <button
         onClick={onClick}
         disabled={completed}
-        className={`group relative overflow-hidden rounded-xl p-6 text-left border transition-all duration-300 transform flex flex-col w-full animate-fade-in-up bg-carbon-fiber shadow-lg hover:shadow-2xl hover:-translate-y-1 min-h-[220px]
+        className={`group relative overflow-hidden rounded-xl p-6 text-left border transition-all duration-300 transform flex flex-col w-full animate-fade-in-up shadow-lg hover:shadow-2xl hover:-translate-y-1 min-h-[220px] card-premium
         ${completed 
             ? 'border-green-500/50 cursor-default shadow-[0_0_15px_rgba(34,197,94,0.1)] hover:translate-y-0 hover:shadow-none' 
             : (highlight 

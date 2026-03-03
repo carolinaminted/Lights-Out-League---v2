@@ -206,7 +206,7 @@ const EventSummaryTile: React.FC<EventSummaryTileProps> = ({ event, schedule, on
     return (
         <button 
             onClick={onClick}
-            className="w-full text-left relative overflow-hidden rounded-xl bg-carbon-fiber border border-pure-white/10 hover:border-primary-red/50 shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col h-52 items-center justify-center p-6"
+            className="w-full text-left relative overflow-hidden rounded-xl card-premium border border-pure-white/10 hover:border-primary-red/50 shadow-lg hover:shadow-2xl transition-all duration-300 group flex flex-col h-52 items-center justify-center p-6"
         >
             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ background: `linear-gradient(135deg, ${accentColor} 0%, transparent 80%)` }}></div>
             {isSprint && (

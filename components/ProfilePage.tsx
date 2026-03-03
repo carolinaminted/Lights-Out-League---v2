@@ -567,7 +567,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
              {usageEvents.length > 0 ? (
                 <ul className="space-y-2">
                     {usageEvents.map(e => (
-                        <li key={e.id} className="telemetry-row rounded border border-pure-white/5">
+                        <li key={e.id} className="flex justify-between items-center p-3 bg-pure-white/5 rounded-lg border border-pure-white/5">
                             <span className="font-semibold text-ghost-white">R{e.round}: {e.name}</span>
                             <span className="text-xs text-highlight-silver">{e.country}</span>
                         </li>
@@ -874,26 +874,57 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
                             </button>
                             {isExpanded && (
                                 <div className="p-4 border-t border-accent-gray/50 text-sm bg-black/20">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                        <div className="bg-accent-gray/30 rounded-xl p-4 border border-pure-white/5">
-                                            <span className="text-xs font-bold uppercase tracking-widest text-primary-red mb-2 block">Teams</span>
-                                            <div className="text-pure-white font-semibold">
-                                                <span className="block">{getEntityName(picks.aTeams[0])}, {getEntityName(picks.aTeams[1])}</span>
-                                                <span className="block text-highlight-silver text-sm mt-1">{getEntityName(picks.bTeam)} <span className="text-xs opacity-70">(Class B)</span></span>
+                                    <div className="grid grid-cols-3 gap-4 mb-6">
+                                        <div className="col-span-2 bg-accent-gray/30 rounded-xl p-4 border border-pure-white/5">
+                                            <span className="text-xs font-bold uppercase tracking-widest text-primary-red mb-3 block text-center">Teams</span>
+                                            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                                                <div className="text-center">
+                                                    <span className="text-[10px] font-bold uppercase text-green-500 mb-2 block">Class A</span>
+                                                    {picks.aTeams.map(id => (
+                                                        <div key={id} className="flex items-center justify-center gap-2 mb-1">
+                                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getTeamColor(id) || '#C0C0C0' }} />
+                                                            <span className="text-pure-white font-semibold text-sm">{getEntityName(id)}</span>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <div className="text-center">
+                                                    <span className="text-[10px] font-bold uppercase text-green-500 mb-2 block">Class B</span>
+                                                    <div className="flex items-center justify-center gap-2 mb-1">
+                                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getTeamColor(picks.bTeam) || '#C0C0C0' }} />
+                                                        <span className="text-pure-white font-semibold text-sm">{getEntityName(picks.bTeam)}</span>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className="bg-accent-gray/30 rounded-xl p-4 border border-pure-white/5">
-                                            <span className="text-xs font-bold uppercase tracking-widest text-primary-red mb-2 block">Fastest Lap</span>
-                                            <div className="text-pure-white font-semibold">
-                                                {getEntityName(picks.fastestLap)}
+                                        <div className="col-span-1 bg-accent-gray/30 rounded-xl p-4 border border-pure-white/5">
+                                            <span className="text-xs font-bold uppercase tracking-widest text-primary-red mb-3 block text-center">Fastest Lap</span>
+                                            <div className="flex items-center justify-center gap-2">
+                                                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getTeamColor(allDrivers.find(d => d.id === picks.fastestLap)?.constructorId) || '#C0C0C0' }} />
+                                                <span className="text-pure-white font-semibold text-sm">{getEntityName(picks.fastestLap)}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div className="bg-accent-gray/30 rounded-xl p-4 border border-pure-white/5 mb-6">
-                                        <span className="text-xs font-bold uppercase tracking-widest text-primary-red mb-2 block">Drivers</span>
-                                        <div className="text-pure-white font-semibold">
-                                            <span className="block">{getEntityName(picks.aDrivers[0])}, {getEntityName(picks.aDrivers[1])}, {getEntityName(picks.aDrivers[2])}</span>
-                                            <span className="block text-highlight-silver text-sm mt-1">{getEntityName(picks.bDrivers[0])}, {getEntityName(picks.bDrivers[1])} <span className="text-xs opacity-70">(Class B)</span></span>
+                                        <span className="text-xs font-bold uppercase tracking-widest text-primary-red mb-3 block text-center">Drivers</span>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-1 text-center">
+                                                <span className="text-[10px] font-bold uppercase text-green-500 mb-2 block">Class A</span>
+                                                {picks.aDrivers.map(id => (
+                                                    <div key={id} className="flex items-center justify-center gap-2">
+                                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getTeamColor(allDrivers.find(d => d.id === id)?.constructorId) || '#C0C0C0' }} />
+                                                        <span className="text-pure-white font-semibold text-sm">{getEntityName(id)}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div className="space-y-1 text-center">
+                                                <span className="text-[10px] font-bold uppercase text-green-500 mb-2 block">Class B</span>
+                                                {picks.bDrivers.map(id => (
+                                                    <div key={id} className="flex items-center justify-center gap-2">
+                                                        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getTeamColor(allDrivers.find(d => d.id === id)?.constructorId) || '#C0C0C0' }} />
+                                                        <span className="text-pure-white font-semibold text-sm">{getEntityName(id)}</span>
+                                                    </div>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
 
@@ -955,13 +986,15 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
     </div>
     {modalData && (
         <div className="fixed inset-0 bg-carbon-black/80 flex items-center justify-center z-50 p-4" onClick={() => setModalData(null)}>
-            <div className="bg-carbon-fiber rounded-lg max-w-md w-full max-h-[80vh] overflow-y-auto border border-pure-white/10 shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="card-premium w-full max-w-md border border-pure-white/10 shadow-2xl animate-fade-in-up" onClick={e => e.stopPropagation()}>
                 <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-2xl font-bold text-pure-white text-center flex-1">{modalData.title}</h3>
-                         <button onClick={() => setModalData(null)} className="text-highlight-silver hover:text-pure-white text-3xl leading-none ml-4">&times;</button>
+                        <h3 className="text-xl font-bold text-pure-white text-center flex-1">{modalData.title}</h3>
+                         <button onClick={() => setModalData(null)} className="text-highlight-silver hover:text-primary-red transition-colors text-2xl leading-none">&times;</button>
                     </div>
-                    {modalData.content}
+                    <div className="text-highlight-silver text-sm">
+                        {modalData.content}
+                    </div>
                 </div>
             </div>
         </div>

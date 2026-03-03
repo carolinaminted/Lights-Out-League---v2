@@ -129,7 +129,7 @@ const RefreshControl: React.FC<{
 const NavTile: React.FC<{ icon: any; title: string; subtitle: string; desc: string; onClick: () => void; delay?: string }> = ({ icon: Icon, title, subtitle, desc, onClick, delay = '0ms' }) => (
     <button
         onClick={onClick}
-        className="group relative overflow-hidden rounded-2xl p-6 text-left border shadow-lg hover:shadow-[0_0_30px_rgba(218,41,28,0.15)] transition-all duration-300 transform hover:-translate-y-1 flex flex-col w-full min-h-[220px] animate-fade-in-up card-premium-silver card-hover"
+        className="group relative overflow-hidden rounded-2xl p-6 text-left border shadow-lg hover:shadow-[0_0_30px_rgba(218,41,28,0.15)] transition-all duration-300 transform hover:-translate-y-1 flex flex-col w-full min-h-[220px] animate-fade-in-up card-premium card-hover"
         style={{ animationDelay: delay }}
     >
         {/* Background Icon (Huge & Faded) */}
@@ -499,7 +499,7 @@ const PopularityView: React.FC<{
     return (
         <div className="flex flex-col md:h-full animate-fade-in gap-4 pt-2 pb-4 md:overflow-hidden">
              <div className="flex-none flex flex-col md:flex-row justify-end items-center gap-4">
-                <div className="flex bg-carbon-fiber border border-pure-white/10 rounded-lg p-1 w-full md:w-auto overflow-x-auto">
+                <div className="flex bg-carbon-black border border-pure-white/10 rounded-lg p-1 w-full md:w-auto overflow-x-auto">
                     {(['all', '30', '60', '90'] as const).map(range => (
                          <button
                             key={range}
@@ -573,16 +573,16 @@ const SuperlativeCard: React.FC<{
         <button 
             onClick={onClick}
             className={`
-                group relative overflow-hidden rounded-xl p-5 shadow-lg h-full text-left transition-all duration-300 w-full flex flex-col justify-between
+                group relative rounded-xl p-5 shadow-lg h-full text-left transition-all duration-300 w-full flex flex-col justify-between
                 ${isActive 
-                    ? `bg-carbon-fiber ring-2 ${theme.ring} scale-[1.02] opacity-100 z-10 border border-transparent` 
-                    : 'bg-carbon-fiber ring-1 ring-pure-white/10 opacity-70 hover:opacity-100 hover:scale-[1.01] border border-pure-white/5'
+                    ? `bg-carbon-black ring-2 ring-inset ${theme.ring} scale-[1.02] opacity-100 z-10 border border-transparent` 
+                    : 'bg-carbon-black ring-1 ring-inset ring-pure-white/10 opacity-70 hover:opacity-100 hover:scale-[1.01] border border-pure-white/5'
                 }
             `}
         >
             {/* Background Gradient & Pattern */}
             <div className={`absolute inset-0 bg-gradient-to-br ${theme.gradient} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${isActive ? 'opacity-100' : ''}`}></div>
-            <div className="absolute inset-0 bg-checkered-flag opacity-[0.03] pointer-events-none"></div>
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"></div>
             
             <div className="relative z-10 flex items-start justify-between w-full">
                 <div className="min-w-0 flex-1 mr-2">
@@ -713,12 +713,19 @@ const InsightsView: React.FC<{
             {/* Dynamic Leaderboard Section */}
             <div key={activeCategory} className="md:flex-1 mb-8 pb-4 animate-fade-in">
                 <div className="card-premium p-4 md:p-6 transition-all duration-300">
-                    <div className="flex justify-between items-center mb-6 relative z-10 border-b border-pure-white/5 pb-4">
-                        <div>
-                            <h3 className="text-lg md:text-xl font-bold text-pure-white leading-tight uppercase italic tracking-wider">
-                                {activeCategoryData?.listTitle}
-                            </h3>
-                            <p className={`text-xs font-bold uppercase tracking-widest mt-1 ${activeTheme.color} opacity-80`}>Performance Breakdown</p>
+                    <div className="flex justify-between items-center mb-6 relative z-10 border-b border-pure-white/10 pb-4">
+                        <div className="flex items-center gap-3">
+                            <div className={`p-2 rounded-lg ${activeTheme.bg} text-pure-white`}>
+                                <activeCategoryData.icon className="w-5 h-5" />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-black text-pure-white uppercase italic tracking-wider">
+                                    {activeCategoryData?.listTitle}
+                                </h3>
+                                <p className={`text-[10px] font-bold uppercase tracking-[0.2em] mt-0.5 ${activeTheme.color}`}>
+                                    Performance Breakdown
+                                </p>
+                            </div>
                         </div>
                     </div>
 
@@ -1291,7 +1298,7 @@ const LeaderboardPage: React.FC<LeaderboardPageProps> = ({ currentUser, raceResu
             <div className="fixed inset-0 z-[100] flex items-center justify-center bg-carbon-black/90 backdrop-blur-sm p-4 animate-fade-in" onClick={() => setSelectedUserProfile(null)}>
                 <div className="bg-carbon-black border border-pure-white/10 rounded-xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl relative" onClick={e => e.stopPropagation()}>
                     {/* Header - Centered with Red Icon */}
-                    <div className="relative flex items-center justify-center p-4 border-b border-pure-white/10 bg-carbon-fiber">
+                    <div className="relative flex items-center justify-center p-4 border-b border-pure-white/10 bg-carbon-black">
                         <div className="flex items-center gap-3">
                             <div className="bg-primary-red/20 p-2 rounded-full border border-primary-red/50 shadow-[0_0_10px_rgba(218,41,28,0.3)]">
                                 <F1CarIcon className="w-5 h-5 text-primary-red" />

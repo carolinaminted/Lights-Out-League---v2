@@ -253,7 +253,7 @@ const ResultsManagerPage: React.FC<ResultsManagerPageProps> = ({ raceResults, on
                 {/* Main Form Area - Expanded natural height, no internal desktop scroll */}
                 <div className="w-full max-w-6xl mx-auto pb-32 md:pb-12 relative z-10">
                     {selectedEvent ? (
-                        <div className="bg-carbon-fiber rounded-xl p-4 md:p-6 border border-pure-white/10 shadow-2xl flex flex-col mb-4">
+                        <div className="card-premium p-4 md:p-6 border border-pure-white/10 shadow-2xl flex flex-col mb-4">
                             <ResultsForm
                                 event={selectedEvent}
                                 currentResults={raceResults[selectedEvent.id]}

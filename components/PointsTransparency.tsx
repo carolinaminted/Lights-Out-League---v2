@@ -18,7 +18,7 @@ interface PointsTransparencyProps {
 }
 
 const PointTile: React.FC<{ rank: number; points: number; isTop?: boolean }> = ({ rank, points, isTop }) => (
-    <div className={`relative flex flex-col items-center justify-center p-2 md:p-3 rounded-xl border transition-all duration-300 hover:scale-105 ${isTop ? 'bg-gradient-to-b from-primary-red/10 to-transparent border-primary-red/30 shadow-[0_0_15px_rgba(218,41,28,0.1)]' : 'bg-carbon-black/20 border-pure-white/5 hover:bg-pure-white/5'}`}>
+    <div className={`relative flex flex-col items-center justify-center p-2 md:p-3 rounded-xl border ${isTop ? 'bg-gradient-to-b from-primary-red/10 to-transparent border-primary-red/30 shadow-[0_0_15px_rgba(218,41,28,0.1)]' : 'bg-carbon-black/20 border-pure-white/5'}`}>
         <span className={`text-[10px] md:text-sm font-black uppercase tracking-widest mb-1 ${isTop ? 'text-primary-red' : 'text-highlight-silver'}`}>
             {rank === 1 ? 'Winner' : rank === 2 ? '2nd' : rank === 3 ? '3rd' : `P${rank}`}
         </span>
@@ -44,7 +44,7 @@ const PointsCard: React.FC<{
     headerColor?: string;
     children: React.ReactNode;
 }> = ({ title, icon: Icon, subtitle, className, headerColor, children }) => (
-    <div className={`bg-carbon-fiber rounded-xl ring-1 ring-pure-white/10 flex flex-col overflow-hidden shadow-lg ${className}`}>
+    <div className={`card-premium ring-1 ring-pure-white/10 flex flex-col overflow-hidden shadow-lg ${className}`}>
         {/* Header */}
         <div className={`px-4 py-3.5 flex items-center gap-3 border-b border-pure-white/5 bg-carbon-black/20 flex-shrink-0`}>
             <div className={`p-2 rounded-lg ${headerColor || 'bg-pure-white/5 text-pure-white'}`}>
@@ -159,7 +159,7 @@ const PointsTransparency: React.FC<PointsTransparencyProps> = ({ pointsSystem, s
                         </PointsCard>
 
                         {/* Logic Breakdown / Rules Info - flex-1 to fill the vertical gap and align bottom */}
-                        <div className="bg-carbon-fiber rounded-xl p-5 border border-pure-white/10 flex flex-col justify-between shadow-lg flex-1 min-h-[160px]">
+                        <div className="card-premium p-5 flex flex-col justify-between shadow-lg flex-1 min-h-[160px]">
                             <div>
                                 <h4 className="text-xs font-black text-highlight-silver uppercase tracking-[0.2em] mb-4">Scoring Mechanics</h4>
                                 <div className="space-y-4">
