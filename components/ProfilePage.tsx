@@ -874,24 +874,26 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
                             </button>
                             {isExpanded && (
                                 <div className="p-4 border-t border-accent-gray/50 text-sm bg-black/20">
-                                    <div className="space-y-2 mb-4">
-                                        <div className="telemetry-row rounded border border-pure-white/5">
-                                            <span className="font-bold text-primary-red">Teams</span>
-                                            <div className="text-right">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                        <div className="bg-accent-gray/30 rounded-xl p-4 border border-pure-white/5">
+                                            <span className="text-xs font-bold uppercase tracking-widest text-primary-red mb-2 block">Teams</span>
+                                            <div className="text-pure-white font-semibold">
                                                 <span className="block">{getEntityName(picks.aTeams[0])}, {getEntityName(picks.aTeams[1])}</span>
-                                                <span className="block text-highlight-silver">{getEntityName(picks.bTeam)} (Class B)</span>
+                                                <span className="block text-highlight-silver text-sm mt-1">{getEntityName(picks.bTeam)} <span className="text-xs opacity-70">(Class B)</span></span>
                                             </div>
                                         </div>
-                                        <div className="telemetry-row rounded border border-pure-white/5">
-                                            <span className="font-bold text-primary-red">Drivers</span>
-                                            <div className="text-right">
-                                                <span className="block">{getEntityName(picks.aDrivers[0])}, {getEntityName(picks.aDrivers[1])}, {getEntityName(picks.aDrivers[2])}</span>
-                                                <span className="block text-highlight-silver">{getEntityName(picks.bDrivers[0])}, {getEntityName(picks.bDrivers[1])} (Class B)</span>
+                                        <div className="bg-accent-gray/30 rounded-xl p-4 border border-pure-white/5">
+                                            <span className="text-xs font-bold uppercase tracking-widest text-primary-red mb-2 block">Fastest Lap</span>
+                                            <div className="text-pure-white font-semibold">
+                                                {getEntityName(picks.fastestLap)}
                                             </div>
                                         </div>
-                                        <div className="telemetry-row rounded border border-pure-white/5">
-                                            <span className="font-bold text-primary-red">Fastest Lap</span>
-                                            <span className="text-right">{getEntityName(picks.fastestLap)}</span>
+                                    </div>
+                                    <div className="bg-accent-gray/30 rounded-xl p-4 border border-pure-white/5 mb-6">
+                                        <span className="text-xs font-bold uppercase tracking-widest text-primary-red mb-2 block">Drivers</span>
+                                        <div className="text-pure-white font-semibold">
+                                            <span className="block">{getEntityName(picks.aDrivers[0])}, {getEntityName(picks.aDrivers[1])}, {getEntityName(picks.aDrivers[2])}</span>
+                                            <span className="block text-highlight-silver text-sm mt-1">{getEntityName(picks.bDrivers[0])}, {getEntityName(picks.bDrivers[1])} <span className="text-xs opacity-70">(Class B)</span></span>
                                         </div>
                                     </div>
 

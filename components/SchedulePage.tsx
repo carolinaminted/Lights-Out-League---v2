@@ -210,7 +210,7 @@ const SchedulePage: React.FC<SchedulePageProps> = ({ schedules, events, onRefres
                                     <NextRaceHero event={nextRace} schedule={schedules[nextRace.id]} />
                                 </div>
                             ) : (
-                                <div className="bg-carbon-fiber rounded-2xl p-8 border border-pure-white/5 text-center mb-6 opacity-60">
+                                <div className="card-premium-silver rounded-2xl p-8 border border-pure-white/5 text-center mb-6 opacity-60">
                                     <p className="text-highlight-silver italic">The 2026 Season has concluded.</p>
                                 </div>
                             )}
@@ -274,7 +274,7 @@ const SchedulePage: React.FC<SchedulePageProps> = ({ schedules, events, onRefres
 const NextRaceHero: React.FC<{ event: Event; schedule?: EventSchedule }> = ({ event, schedule }) => {
     const raceRaw = schedule?.race || event.lockAtUtc;
     return (
-        <div className="relative overflow-hidden rounded-2xl bg-carbon-fiber border border-pure-white/10 shadow-2xl">
+        <div className="relative overflow-hidden rounded-2xl card-premium border border-pure-white/10 shadow-2xl">
             <div className="absolute inset-0 bg-gradient-to-r from-primary-red/20 to-transparent pointer-events-none"></div>
             <div className="relative z-10 p-6 flex flex-col md:flex-row gap-8">
                 <div className="flex-1">
@@ -328,19 +328,20 @@ const EventDetailsModal: React.FC<{ event: Event; schedule?: EventSchedule; onCl
     return (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-carbon-black/90 backdrop-blur-sm p-4 animate-fade-in" onClick={onClose}>
             {/* Added max-h-[85vh] and overflow-y-auto to handle small screens better */}
-            <div className="w-full max-w-4xl relative overflow-hidden rounded-2xl bg-carbon-fiber border border-pure-white/10 shadow-2xl animate-scale-in flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
+            <div className="w-full max-w-4xl relative overflow-hidden rounded-2xl card-premium border border-pure-white/10 shadow-2xl animate-scale-in flex flex-col max-h-[85vh]" onClick={e => e.stopPropagation()}>
                 
+                {/* Close Button - Sticky or Fixed */}
+                <button onClick={onClose} className="absolute top-2 right-2 z-50 bg-carbon-black/80 hover:bg-carbon-black text-pure-white rounded-full p-2 border border-pure-white/20 shadow-lg">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+
                 {/* Scrollable Container */}
                 <div className="overflow-y-auto custom-scrollbar relative w-full h-full">
-                    {/* Close Button - Sticky or Fixed */}
-                    <button onClick={onClose} className="absolute top-3 right-3 z-30 bg-carbon-black/80 hover:bg-carbon-black text-pure-white rounded-full p-2 border border-pure-white/20 shadow-lg">
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                    </button>
                     
                     <div className="absolute inset-0 bg-gradient-to-br from-primary-red/10 via-transparent to-transparent pointer-events-none h-48"></div>
                     
                     {/* Content - Reduced padding on mobile (p-5 instead of p-6) */}
-                    <div className="relative z-10 p-5 md:p-10 flex flex-col md:flex-row gap-6 md:gap-12">
+                    <div className="relative z-10 p-5 md:p-10 pt-12 md:pt-16 flex flex-col md:flex-row gap-6 md:gap-12">
                         <div className="flex-1 flex flex-col justify-center">
                             <div className="flex items-center gap-2 mb-3">
                                 <span className="text-[10px] md:text-xs font-bold text-highlight-silver bg-carbon-black/50 border border-pure-white/10 px-3 py-1 rounded-full uppercase tracking-wider">Round {event.round}</span>
@@ -421,7 +422,7 @@ const SessionRow: React.FC<{ label: string; time?: string; highlight?: boolean; 
 const CompactEventCard: React.FC<{ event: Event; schedule?: EventSchedule; isNext?: boolean; onClick: () => void }> = ({ event, schedule, isNext, onClick }) => {
     const raceRaw = schedule?.race || event.lockAtUtc;
     return (
-        <button onClick={onClick} className={`w-full text-left flex flex-col p-4 rounded-xl border transition-all h-full justify-between group hover:scale-[1.02] ${isNext ? 'bg-carbon-black border-primary-red shadow-lg' : 'bg-carbon-fiber border-pure-white/10 shadow-lg'}`}>
+        <button onClick={onClick} className={`w-full text-left flex flex-col p-4 rounded-xl border transition-all h-full justify-between group hover:scale-[1.02] ${isNext ? 'bg-carbon-black border-primary-red shadow-lg' : 'card-premium-silver border-pure-white/10 shadow-lg'}`}>
             <div className="w-full">
                 <div className="flex justify-between items-start mb-2">
                     <span className="text-xs font-bold text-highlight-silver uppercase">R{event.round}</span>
