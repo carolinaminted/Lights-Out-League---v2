@@ -4,7 +4,7 @@ import { User, PickSelection, RaceResults, EntityClass, EventResult, PointsSyste
 import useFantasyData from '../hooks/useFantasyData.ts';
 import { calculateScoreRollup, calculatePointsForEvent } from '../services/scoringService.ts';
 import { CONSTRUCTORS, CURRENT_SEASON } from '../constants.ts';
-import { updateUserProfile, getAllUsersAndPicks } from '../services/firestoreService.ts';
+import { updateUserProfile } from '../services/firestoreService.ts';
 import { db, auth, functions } from '../services/firebase.ts';
 import { validateDisplayName, validateRealName, sanitizeString } from '../services/validation.ts';
 import { doc, getDoc } from '@firebase/firestore';
@@ -233,39 +233,8 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ user, seasonPicks, raceResult
               return;
           }
 
-          // 2. Fallback: Client-side Calculation (ensure consistency with Dashboard)
-          try {
-              // Fetch all data necessary for ranking
-              const { users: allUsersList, allPicks } = await getAllUsersAndPicks();
-              
-              // Filter users similar to Leaderboard logic (exclude admin fallback user if present)
-              const validUsers = allUsersList.filter(u => u.displayName !== 'Admin Principal');
-
-              // Calculate points for everyone
-              const scores = validUsers.map(u => {
-                  // Use pre-calculated if available in public_users doc
-                  if (u.totalPoints !== undefined) {
-                      return { uid: u.id, points: u.totalPoints };
-                  }
-                  
-                  // Calculate from raw picks
-                  const userPicks = allPicks[u.id] || {};
-                  // Use the props passed to ProfilePage for the calculation context (live rules)
-                  const scoreData = calculateScoreRollup(userPicks, raceResults, pointsSystem, allDrivers);
-                  return { uid: u.id, points: scoreData.totalPoints };
-              });
-
-              // Sort descending
-              scores.sort((a, b) => b.points - a.points);
-
-              // Find current user's index
-              const index = scores.findIndex(s => s.uid === user.id);
-              if (index !== -1) {
-                  setGlobalRank(index + 1);
-              }
-          } catch (e) {
-              console.error("Failed to calculate fallback rank", e);
-          }
+          // 2. Fallback: Client-side Calculation (Removed to prevent expensive reads)
+          console.warn("Global rank not available in public profile");
       };
 
       // If user object already has rank (from passed prop if available), use it, otherwise fetch/calc
