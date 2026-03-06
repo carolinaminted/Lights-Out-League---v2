@@ -41,7 +41,7 @@ import { ChevronDownIcon } from './components/icons/ChevronDownIcon.tsx';
 import { RACE_RESULTS, DEFAULT_POINTS_SYSTEM, DRIVERS, CONSTRUCTORS, EVENTS } from './constants.ts';
 import { auth, db } from './services/firebase.ts';
 import { onAuthStateChanged } from '@firebase/auth';
-import { onSnapshot, doc } from '@firebase/firestore';
+import { onSnapshot, doc, getDoc } from '@firebase/firestore';
 import { getUserProfile, getUserPicks, saveUserPicks, saveFormLocks, saveRaceResults, saveScoringSettings, getLeagueEntities, saveLeagueEntities, getEventSchedules, getAllUsersAndPicks, DEFAULT_PAGE_SIZE } from './services/firestoreService.ts';
 import { calculateScoreRollup } from './services/scoringService.ts';
 import { useSessionGuard } from './hooks/useSessionGuard.ts';
@@ -314,23 +314,7 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    let unsubscribeResults = () => {};
-    let unsubscribeLocks = () => {};
-    let unsubscribeProfile = () => {};
-    let unsubscribePicks = () => {}; // NEW: Separate listener for picks
-    let unsubscribePoints = () => {};
-    let unsubscribeSchedules = () => {};
-    let unsubscribePublicProfile = () => {};
-
     const unsubscribeAuth = onAuthStateChanged(auth, async (firebaseUser) => {
-      unsubscribeResults();
-      unsubscribeLocks();
-      unsubscribeProfile();
-      unsubscribePicks();
-      unsubscribePoints();
-      unsubscribeSchedules();
-      unsubscribePublicProfile();
-
       if (firebaseUser) {
         // If we have a user but aren't authenticated yet, we are transitioning (logging in)
         if (!isAuthenticated) {
@@ -352,72 +336,71 @@ const App: React.FC = () => {
             await saveLeagueEntities(DRIVERS, CONSTRUCTORS);
         }
 
-        const schedulesRef = doc(db, 'app_state', 'event_schedules');
-        unsubscribeSchedules = onSnapshot(schedulesRef, (docSnap) => {
-            if (docSnap.exists()) {
-                setEventSchedules(docSnap.data() as { [eventId: string]: EventSchedule });
-            }
-        });
+        // Fetch all app state concurrently
+        const [
+            schedulesSnap,
+            resultsSnap,
+            locksSnap,
+            pointsSnap,
+            publicProfileSnap,
+            profileSnap,
+            picksSnap
+        ] = await Promise.all([
+            getDoc(doc(db, 'app_state', 'event_schedules')),
+            getDoc(doc(db, 'app_state', 'race_results')),
+            getDoc(doc(db, 'app_state', 'form_locks')),
+            getDoc(doc(db, 'app_state', 'scoring_config')),
+            getDoc(doc(db, 'public_users', firebaseUser.uid)),
+            getDoc(doc(db, 'users', firebaseUser.uid)),
+            getDoc(doc(db, 'userPicks', firebaseUser.uid))
+        ]);
 
-        const resultsRef = doc(db, 'app_state', 'race_results');
-        unsubscribeResults = onSnapshot(resultsRef, (docSnap) => {
-          if (docSnap.exists() && Object.keys(docSnap.data()).length > 0) {
-            setRaceResults(docSnap.data() as RaceResults);
-          } else {
+        if (schedulesSnap.exists()) {
+            setEventSchedules(schedulesSnap.data() as { [eventId: string]: EventSchedule });
+        }
+
+        if (resultsSnap.exists() && Object.keys(resultsSnap.data()).length > 0) {
+            setRaceResults(resultsSnap.data() as RaceResults);
+        } else {
             saveRaceResults(RACE_RESULTS);
-          }
-        });
+        }
 
-        const locksRef = doc(db, 'app_state', 'form_locks');
-        unsubscribeLocks = onSnapshot(locksRef, (docSnap) => {
-            if (docSnap.exists()) {
-                setFormLocks(docSnap.data());
+        if (locksSnap.exists()) {
+            setFormLocks(locksSnap.data());
+        } else {
+            saveFormLocks({});
+        }
+
+        if (pointsSnap.exists()) {
+            const data = pointsSnap.data();
+            if (data.profiles && Array.isArray(data.profiles)) {
+                setScoringSettings(data as ScoringSettingsDoc);
             } else {
-                saveFormLocks({});
+                const migratedSettings: ScoringSettingsDoc = {
+                    activeProfileId: 'legacy',
+                    profiles: [{ id: 'legacy', name: 'Legacy Config', config: data as PointsSystem }]
+                };
+                setScoringSettings(migratedSettings);
             }
-        });
+        } else {
+            saveScoringSettings(defaultSettings);
+        }
 
-        const pointsRef = doc(db, 'app_state', 'scoring_config');
-        unsubscribePoints = onSnapshot(pointsRef, (docSnap) => {
-            if (docSnap.exists()) {
-                const data = docSnap.data();
-                if (data.profiles && Array.isArray(data.profiles)) {
-                    setScoringSettings(data as ScoringSettingsDoc);
-                } else {
-                    const migratedSettings: ScoringSettingsDoc = {
-                        activeProfileId: 'legacy',
-                        profiles: [{ id: 'legacy', name: 'Legacy Config', config: data as PointsSystem }]
-                    };
-                    setScoringSettings(migratedSettings);
-                }
-            } else {
-                saveScoringSettings(defaultSettings);
-            }
-        });
+        let publicRank: number | undefined;
+        let publicTotalPoints: number | undefined;
+        if (publicProfileSnap.exists()) {
+            const data = publicProfileSnap.data();
+            publicRank = data.rank;
+            publicTotalPoints = data.totalPoints;
+        }
 
-        const publicProfileRef = doc(db, 'public_users', firebaseUser.uid);
-        unsubscribePublicProfile = onSnapshot(publicProfileRef, (snap) => {
-            if (snap.exists()) {
-                const data = snap.data();
-                setUser(prev => {
-                    if (prev && prev.id === firebaseUser.uid) {
-                        return { ...prev, rank: data.rank, totalPoints: data.totalPoints };
-                    }
-                    return prev;
-                });
-            }
-        });
-
-        // Listener 1: User Profile (Details)
-        const profileRef = doc(db, 'users', firebaseUser.uid);
-        unsubscribeProfile = onSnapshot(profileRef, async (profileSnap) => {
-          if (profileSnap.exists()) {
+        if (profileSnap.exists()) {
             const userProfile = { id: firebaseUser.uid, ...profileSnap.data() } as User;
-            setUser(prev => ({
+            setUser({
                 ...userProfile,
-                rank: prev?.rank,
-                totalPoints: prev?.totalPoints
-            }));
+                rank: publicRank,
+                totalPoints: publicTotalPoints
+            });
             
             // Only set authenticated once profile is loaded
             setIsAuthenticated(true);
@@ -425,16 +408,11 @@ const App: React.FC = () => {
             
             clearTimeout(safetyTimeout);
             setTimeout(() => setIsTransitioning(false), 2200);
-          }
-        });
+        }
 
-        // Listener 2: User Picks (Realtime Penalties/Selections)
-        const picksRef = doc(db, 'userPicks', firebaseUser.uid);
-        unsubscribePicks = onSnapshot(picksRef, (picksSnap) => {
-            if (picksSnap.exists()) {
-                setSeasonPicks(picksSnap.data() as { [eventId: string]: PickSelection });
-            }
-        });
+        if (picksSnap.exists()) {
+            setSeasonPicks(picksSnap.data() as { [eventId: string]: PickSelection });
+        }
 
       } else {
         setUser(null);
@@ -454,13 +432,6 @@ const App: React.FC = () => {
     
     return () => {
       unsubscribeAuth();
-      unsubscribeResults();
-      unsubscribeLocks();
-      unsubscribeProfile();
-      unsubscribePicks();
-      unsubscribePoints();
-      unsubscribeSchedules();
-      unsubscribePublicProfile();
     };
   }, []); 
 
@@ -475,7 +446,11 @@ const App: React.FC = () => {
     if (!user) return;
     try {
       await saveUserPicks(user.id, eventId, picks, !!user.isAdmin);
-      // Removed getUserPicks re-fetch here because onSnapshot handles it now
+      
+      // Re-fetch picks manually since we removed the global onSnapshot listener
+      const updatedPicks = await getUserPicks(user.id);
+      setSeasonPicks(updatedPicks);
+      
       showToast(`Picks for ${eventId} submitted successfully!`, 'success');
     } catch (error) {
       console.error("Failed to submit picks:", error);
