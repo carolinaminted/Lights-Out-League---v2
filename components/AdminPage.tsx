@@ -18,7 +18,7 @@ import { useMaintenanceMode } from '../hooks/useMaintenanceMode.ts';
 import { auth } from '../services/firebase.ts';
 
 interface AdminPageProps {
-    setAdminSubPage: (page: 'dashboard' | 'results' | 'manage-users' | 'scoring' | 'entities' | 'schedule' | 'invitations' | 'database') => void;
+    setAdminSubPage: (page: 'dashboard' | 'results' | 'manage-users' | 'scoring' | 'entities' | 'schedule' | 'invitations' | 'database' | 'survival') => void;
 }
 
 const AdminPage: React.FC<AdminPageProps> = ({ setAdminSubPage }) => {
@@ -146,7 +146,7 @@ const AdminPage: React.FC<AdminPageProps> = ({ setAdminSubPage }) => {
                 onIconClick={() => setAdminSubPage('database')}
             />
             
-            <div className="pb-20 md:pb-12 px-2">
+            <div className="px-2 pb-12">
                 {/* Race Control Panel (Maintenance) */}
                 <div className={`mb-6 p-4 rounded-xl border ${maintenance?.enabled ? 'bg-red-900/10 border-primary-red/50' : 'card-premium border-pure-white/10'} shadow-lg transition-colors`}>
                     <div className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -234,6 +234,14 @@ const AdminPage: React.FC<AdminPageProps> = ({ setAdminSubPage }) => {
                         description="Create and manage registration codes."
                         onClick={() => setAdminSubPage('invitations')}
                         delay="500ms"
+                    />
+                    <AdminTile
+                        icon={TrophyIcon}
+                        title="Survival Challenge"
+                        subtitle="Game Mode"
+                        description="Manage the Podium Survival challenge."
+                        onClick={() => setAdminSubPage('survival')}
+                        delay="600ms"
                     />
                 </div>
             </div>
@@ -338,7 +346,7 @@ const AdminTile: React.FC<AdminTileProps> = ({ icon: Icon, title, subtitle, desc
   return (
     <button
         onClick={onClick}
-        className="group relative rounded-xl p-6 text-left border border-pure-white/10 hover:border-primary-red/50 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col w-full min-h-[220px] card-premium animate-fade-in-up"
+        className="group relative rounded-xl p-6 text-left border border-pure-white/10 hover:border-primary-red/50 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col w-full card-premium animate-fade-in-up"
         style={{ animationDelay: delay }}
     >
         {/* Background Icon (Huge & Faded) */}

@@ -24,7 +24,7 @@ import SchedulePage from './components/SchedulePage.tsx';
 import LeagueHubPage from './components/LeagueHubPage.tsx';
 import SessionWarningModal from './components/SessionWarningModal.tsx';
 import ErrorBoundary from './components/ErrorBoundary.tsx';
-import { User, PickSelection, RaceResults, PointsSystem, Driver, Constructor, ScoringSettingsDoc, EventSchedule, LeaderboardCache } from './types.ts';
+import { User, PickSelection, RaceResults, PointsSystem, Driver, Constructor, ScoringSettingsDoc, EventSchedule, LeaderboardCache, SurvivalConfig, SurvivalPickDoc, SurvivalStanding } from './types.ts';
 import { HomeIcon } from './components/icons/HomeIcon.tsx';
 import { DonationIcon } from './components/icons/DonationIcon.tsx';
 import { PicksIcon } from './components/icons/PicksIcon.tsx';
@@ -41,7 +41,7 @@ import { ChevronDownIcon } from './components/icons/ChevronDownIcon.tsx';
 import { RACE_RESULTS, DEFAULT_POINTS_SYSTEM, DRIVERS, CONSTRUCTORS, EVENTS } from './constants.ts';
 import { auth, db } from './services/firebase.ts';
 import { onAuthStateChanged } from '@firebase/auth';
-import { onSnapshot, doc, getDoc } from '@firebase/firestore';
+import { onSnapshot, doc, getDoc, collection } from '@firebase/firestore';
 import { getUserProfile, getUserPicks, saveUserPicks, saveFormLocks, saveRaceResults, saveScoringSettings, getLeagueEntities, saveLeagueEntities, getEventSchedules, getAllUsersAndPicks, DEFAULT_PAGE_SIZE } from './services/firestoreService.ts';
 import { calculateScoreRollup } from './services/scoringService.ts';
 import { useSessionGuard } from './hooks/useSessionGuard.ts';
@@ -52,7 +52,13 @@ import RedFlagScreen from './components/RedFlagScreen.tsx';
 import AdminMaintenanceBanner from './components/AdminMaintenanceBanner.tsx';
 
 
-export type Page = 'home' | 'picks' | 'leaderboard' | 'profile' | 'admin' | 'points' | 'donate' | 'gp-results' | 'duesPayment' | 'drivers-teams' | 'schedule' | 'league-hub';
+import { SurvivalHubPage } from './components/SurvivalHubPage.tsx';
+import { SurvivalLeaderboardPage } from './components/SurvivalLeaderboardPage.tsx';
+import { AdminSurvivalPage } from './components/AdminSurvivalPage.tsx';
+
+export type Page = 'home' | 'picks' | 'leaderboard' | 'profile' | 'admin' | 'points' | 'donate' | 'gp-results' | 'duesPayment' | 'drivers-teams' | 'schedule' | 'league-hub' | 'survival' | 'survival-leaderboard';
+
+type AdminSubPage = 'dashboard' | 'results' | 'manage-users' | 'scoring' | 'entities' | 'schedule' | 'invitations' | 'database' | 'survival';
 
 
 // New SideNavItem component for desktop sidebar
@@ -178,6 +184,17 @@ const SideNav: React.FC<{ user: User | null; activePage: Page; navigateToPage: (
                     isParentActive={['league-hub', 'points', 'donate', 'duesPayment', 'schedule', 'gp-results', 'drivers-teams'].includes(activePage)}
                 />
 
+                {user?.duesPaidStatus === 'Paid' && (
+                    <SideNavItem 
+                        icon={TrophyIcon} 
+                        label="Survival" 
+                        page="survival" 
+                        activePage={activePage} 
+                        setActivePage={navigateToPage} 
+                        isParentActive={['survival', 'survival-leaderboard'].includes(activePage)}
+                    />
+                )}
+
                 {isUserAdmin(user) && (
                   <SideNavItem icon={AdminIcon} label="Admin" page="admin" activePage={activePage} setActivePage={navigateToPage} />
                 )}
@@ -203,12 +220,18 @@ const App: React.FC = () => {
   const [transitionVariant, setTransitionVariant] = useState(1);
   const [activePage, setActivePage] = useState<Page>('home');
   const [targetEventId, setTargetEventId] = useState<string | null>(null);
-  const [adminSubPage, setAdminSubPage] = useState<'dashboard' | 'results' | 'manage-users' | 'scoring' | 'entities' | 'schedule' | 'invitations' | 'database'>('dashboard');
+  const [adminSubPage, setAdminSubPage] = useState<AdminSubPage>('dashboard');
   const [seasonPicks, setSeasonPicks] = useState<{ [eventId: string]: PickSelection }>({});
   const [raceResults, setRaceResults] = useState<RaceResults>({});
   const [formLocks, setFormLocks] = useState<{ [eventId: string]: boolean }>({});
   const [eventSchedules, setEventSchedules] = useState<{ [eventId: string]: EventSchedule }>({});
   const [leaderboardResetToken, setLeaderboardResetToken] = useState(0);
+  
+  // Survival Challenge State
+  const [survivalConfig, setSurvivalConfig] = useState<SurvivalConfig | null>(null);
+  const [survivalPicks, setSurvivalPicks] = useState<SurvivalPickDoc>({});
+  const [survivalStandings, setSurvivalStandings] = useState<SurvivalStanding[]>([]);
+
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   
   const { showToast } = useToast();
@@ -231,7 +254,7 @@ const App: React.FC = () => {
   // 'scoring' and 'results' (ResultsForm) remain scrollable pages for now as they are long forms
   const isLockedLayout = lockedDesktopPages.includes(activePage) || (
       activePage === 'admin' && 
-      ['dashboard', 'invitations', 'entities', 'manage-users', 'schedule', 'database'].includes(adminSubPage)
+      ['invitations', 'entities', 'manage-users', 'schedule', 'database'].includes(adminSubPage)
   );
 
   // Data Cache for Leaderboard to prevent redundant fetches on tab switch
@@ -436,6 +459,42 @@ const App: React.FC = () => {
   }, []); 
 
   useEffect(() => {
+    if (!user) {
+      setSurvivalConfig(null);
+      setSurvivalPicks({});
+      setSurvivalStandings([]);
+      return;
+    }
+
+    // Realtime listeners for Survival Challenge
+    const unsubConfig = onSnapshot(doc(db, 'app_state', 'survival_config'), (doc) => {
+      if (doc.exists()) {
+        setSurvivalConfig(doc.data() as SurvivalConfig);
+      }
+    });
+
+    const unsubPicks = onSnapshot(doc(db, 'survival_picks', user.id), (doc) => {
+      if (doc.exists()) {
+        setSurvivalPicks(doc.data() as SurvivalPickDoc);
+      }
+    });
+
+    const unsubStandings = onSnapshot(collection(db, 'survival_standings'), (snapshot) => {
+      const standings: SurvivalStanding[] = [];
+      snapshot.forEach(doc => {
+        standings.push(doc.data() as SurvivalStanding);
+      });
+      setSurvivalStandings(standings);
+    });
+
+    return () => {
+      unsubConfig();
+      unsubPicks();
+      unsubStandings();
+    };
+  }, [user]);
+
+  useEffect(() => {
     if (scrollContainerRef.current) {
         scrollContainerRef.current.scrollTop = 0;
     }
@@ -547,6 +606,28 @@ const App: React.FC = () => {
         />;
       case 'league-hub':
         return <LeagueHubPage setActivePage={navigateToPage} user={user} />;
+      case 'survival':
+        return <SurvivalHubPage 
+          user={user!} 
+          survivalConfig={survivalConfig} 
+          survivalPicks={survivalPicks} 
+          survivalStandings={survivalStandings} 
+          events={mergedEvents} 
+          allDrivers={allDrivers} 
+          allConstructors={allConstructors}
+          formLocks={formLocks}
+          raceResults={raceResults}
+          navigateToPage={navigateToPage} 
+        />;
+      case 'survival-leaderboard':
+        return <SurvivalLeaderboardPage 
+          survivalStandings={survivalStandings} 
+          survivalPicks={survivalPicks} 
+          events={mergedEvents} 
+          allDrivers={allDrivers} 
+          currentEventId={survivalConfig?.currentEventId} 
+          onBack={() => navigateToPage('survival')} 
+        />;
       case 'gp-results':
         return <GpResultsPage raceResults={raceResults} allDrivers={allDrivers} allConstructors={allConstructors} events={mergedEvents} setActivePage={navigateToPage} />;
       case 'profile':
@@ -601,6 +682,15 @@ const App: React.FC = () => {
                 return <AdminInvitationPage setAdminSubPage={setAdminSubPage} user={user} />;
             case 'database':
                 return <DatabaseManagerPage setAdminSubPage={setAdminSubPage} />;
+            case 'survival':
+                return <AdminSurvivalPage 
+                  setAdminSubPage={setAdminSubPage} 
+                  survivalConfig={survivalConfig} 
+                  survivalPicks={survivalPicks} 
+                  survivalStandings={survivalStandings} 
+                  events={mergedEvents} 
+                  raceResults={raceResults} 
+                />;
             default:
                 return <AdminPage setAdminSubPage={setAdminSubPage} />;
         }
@@ -670,11 +760,14 @@ const App: React.FC = () => {
             </main>
         </div>
 
-        <nav className={`absolute bottom-0 left-0 right-0 bg-carbon-black/90 backdrop-blur-xl border-t border-primary-red/15 grid ${isUserAdmin(user) ? 'grid-cols-6' : 'grid-cols-5'} md:hidden z-50 pb-safe`}>
+        <nav className={`absolute bottom-0 left-0 right-0 bg-carbon-black/90 backdrop-blur-xl border-t border-primary-red/15 grid ${isUserAdmin(user) ? (user?.duesPaidStatus === 'Paid' ? 'grid-cols-7' : 'grid-cols-6') : (user?.duesPaidStatus === 'Paid' ? 'grid-cols-6' : 'grid-cols-5')} md:hidden z-50 pb-safe`}>
             <NavItem icon={HomeIcon} label="Home" page="home" activePage={activePage} setActivePage={navigateToPage} />
             <NavItem icon={ProfileIcon} label="Profile" page="profile" activePage={activePage} setActivePage={navigateToPage} />
             <NavItem icon={PicksIcon} label="Picks" page="picks" activePage={activePage} setActivePage={navigateToPage} />
             <NavItem icon={LeagueIcon} label="League" page="league-hub" activePage={activePage} setActivePage={navigateToPage} />
+            {user?.duesPaidStatus === 'Paid' && (
+              <NavItem icon={TrophyIcon} label="Survival" page="survival" activePage={activePage} setActivePage={navigateToPage} />
+            )}
             <NavItem icon={LeaderboardIcon} label="Leaderboard" page="leaderboard" activePage={activePage} setActivePage={navigateToPage} />
             {isUserAdmin(user) && (
               <NavItem icon={AdminIcon} label="Admin" page="admin" activePage={activePage} setActivePage={navigateToPage} />

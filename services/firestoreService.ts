@@ -1,9 +1,9 @@
 import { db, functions } from './firebase.ts';
 import { doc, getDoc, setDoc, collection, getDocs, updateDoc, query, orderBy, addDoc, Timestamp, runTransaction, deleteDoc, writeBatch, serverTimestamp, where, limit, startAfter, QueryDocumentSnapshot, DocumentData, deleteField, onSnapshot } from '@firebase/firestore';
 import { httpsCallable } from '@firebase/functions';
-import { PickSelection, User, RaceResults, ScoringSettingsDoc, Driver, Constructor, EventSchedule, InvitationCode, AdminLogEntry, LeagueConfig, MaintenanceState } from '../types.ts';
+import { PickSelection, User, RaceResults, ScoringSettingsDoc, Driver, Constructor, EventSchedule, InvitationCode, AdminLogEntry, LeagueConfig, MaintenanceState, SurvivalConfig, SurvivalPickDoc, SurvivalPick, SurvivalStanding } from '../types.ts';
 import { User as FirebaseUser } from '@firebase/auth';
-import { EVENTS, LEAGUE_DUES_AMOUNT } from '../constants.ts';
+import { EVENTS, LEAGUE_DUES_AMOUNT, CURRENT_SEASON } from '../constants.ts';
 
 export const DEFAULT_PAGE_SIZE = 50;
 export const MAX_PAGE_SIZE = 100;
@@ -414,4 +414,95 @@ export const setMaintenanceMode = async (enabled: boolean, adminUid: string, mes
         enabled_by: adminUid,
         enabled_at: serverTimestamp()
     }, { merge: true });
+};
+
+// ==========================================
+// PODIUM SURVIVAL SERVICE FUNCTIONS
+// ==========================================
+
+// --- Config ---
+export const getSurvivalConfig = async (): Promise<SurvivalConfig | null> => {
+  const ref = doc(db, 'app_state', 'survival_config');
+  const snap = await getDoc(ref);
+  return snap.exists() ? snap.data() as SurvivalConfig : null;
+};
+
+export const saveSurvivalConfig = async (config: Partial<SurvivalConfig>) => {
+  const ref = doc(db, 'app_state', 'survival_config');
+  await setDoc(ref, { ...config, updatedAt: serverTimestamp() }, { merge: true });
+};
+
+// --- Picks ---
+export const getSurvivalPicks = async (uid: string): Promise<SurvivalPickDoc> => {
+  const ref = doc(db, 'survival_picks', uid);
+  const snap = await getDoc(ref);
+  return snap.exists() ? snap.data() as SurvivalPickDoc : {};
+};
+
+export const saveSurvivalPick = async (uid: string, eventId: string, pick: SurvivalPick) => {
+  const ref = doc(db, 'survival_picks', uid);
+  await setDoc(ref, { [eventId]: pick }, { merge: true });
+};
+
+export const fetchAllSurvivalPicks = async (): Promise<{ [uid: string]: SurvivalPickDoc }> => {
+  const snap = await getDocs(collection(db, 'survival_picks'));
+  const all: { [uid: string]: SurvivalPickDoc } = {};
+  snap.forEach(d => { all[d.id] = d.data() as SurvivalPickDoc; });
+  return all;
+};
+
+// --- Standings ---
+export const getSurvivalStandings = async (): Promise<SurvivalStanding[]> => {
+  const snap = await getDocs(collection(db, 'survival_standings'));
+  return snap.docs.map(d => ({ ...d.data(), userId: d.id } as SurvivalStanding));
+};
+
+export const saveSurvivalStanding = async (uid: string, standing: Partial<SurvivalStanding>) => {
+  const ref = doc(db, 'survival_standings', uid);
+  await setDoc(ref, { ...standing, updatedAt: serverTimestamp() }, { merge: true });
+};
+
+export const batchUpdateSurvivalStandings = async (
+  updates: { uid: string; data: Partial<SurvivalStanding> }[]
+) => {
+  const batch = writeBatch(db);
+  updates.forEach(({ uid, data }) => {
+    const ref = doc(db, 'survival_standings', uid);
+    batch.set(ref, { ...data, updatedAt: serverTimestamp() }, { merge: true });
+  });
+  await batch.commit();
+};
+
+// --- Challenge Lifecycle (Admin) ---
+export const initializeSurvivalChallenge = async (
+  startEventId: string,
+  participants: { uid: string; displayName: string }[]
+) => {
+  // 1. Save config
+  const configRef = doc(db, 'app_state', 'survival_config');
+  await setDoc(configRef, {
+    season: CURRENT_SEASON,
+    status: 'active',
+    startEventId,
+    currentEventId: startEventId,
+    maxDriverUses: 3,
+    lockedParticipants: participants.map(p => p.uid),
+    createdAt: serverTimestamp(),
+    updatedAt: serverTimestamp()
+  } as Partial<SurvivalConfig>);
+
+  // 2. Initialize standings for all participants
+  const batch = writeBatch(db);
+  participants.forEach(({ uid, displayName }) => {
+    const ref = doc(db, 'survival_standings', uid);
+    batch.set(ref, {
+      userId: uid,
+      displayName,
+      status: 'alive',
+      driverUsage: {},
+      survivedRounds: 0,
+      updatedAt: serverTimestamp()
+    } as Partial<SurvivalStanding>);
+  });
+  await batch.commit();
 };

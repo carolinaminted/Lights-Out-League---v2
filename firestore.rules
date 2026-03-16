@@ -113,6 +113,21 @@ service cloud.firestore {
        allow write: if isOwner(userId) || isAdmin();
     }
 
+    // --- Survival Challenge ---
+    match /survival_picks/{userId} {
+      // All signed-in users can read (picks are public)
+      allow read: if isSignedIn();
+      // Only owner can write their own picks, admin can override
+      allow write: if isOwner(userId) || isAdmin();
+    }
+
+    match /survival_standings/{userId} {
+      // Public read for leaderboard
+      allow read: if true;
+      // Only admin/Cloud Functions write standings
+      allow write: if isAdmin();
+    }
+
     // --- Global App State ---
     match /app_state/{document=**} {
        allow read: if isSignedIn();

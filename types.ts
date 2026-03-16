@@ -165,3 +165,46 @@ export interface MaintenanceState {
     enabled_by?: string;
     enabled_at?: any;
 }
+
+// ==========================================
+// PODIUM SURVIVAL CHALLENGE TYPES
+// ==========================================
+
+export type SurvivalChallengeStatus = 'pending' | 'active' | 'completed';
+export type SurvivalUserStatus = 'alive' | 'eliminated';
+export type SurvivalEliminationReason = 'wrong_pick' | 'missed_pick';
+
+export interface SurvivalConfig {
+  season: string;
+  status: SurvivalChallengeStatus;
+  startEventId: string;
+  currentEventId: string;
+  endEventId?: string;
+  winnerId?: string;
+  maxDriverUses: number;
+  createdAt: any;
+  updatedAt: any;
+  lockedParticipants: string[];
+}
+
+export interface SurvivalPick {
+  driverId: string;
+  submittedAt: any;
+}
+
+export interface SurvivalPickDoc {
+  [eventId: string]: SurvivalPick;
+}
+
+export interface SurvivalStanding {
+  userId: string;
+  displayName: string;
+  status: SurvivalUserStatus;
+  eliminatedAtEventId?: string;
+  eliminatedReason?: SurvivalEliminationReason;
+  driverUsage: { [driverId: string]: number };
+  survivedRounds: number;
+  lastPickDriverId?: string;
+  lastPickPosition?: number;
+  updatedAt: any;
+}
