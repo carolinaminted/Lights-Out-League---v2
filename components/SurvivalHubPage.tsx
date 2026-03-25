@@ -34,6 +34,7 @@ export const SurvivalHubPage: React.FC<SurvivalHubPageProps> = ({
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedDriverId, setSelectedDriverId] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ action: () => void; message: string } | null>(null);
 
   // 1. Dues Gate
   if (user.duesPaidStatus !== 'Paid') {
@@ -129,22 +130,25 @@ export const SurvivalHubPage: React.FC<SurvivalHubPageProps> = ({
       return;
     }
 
-    if (!window.confirm('Submit this driver for the survival round?')) return;
-
-    setIsSubmitting(true);
-    try {
-      await saveSurvivalPick(user.id, currentEvent.id, {
-        driverId: selectedDriverId,
-        submittedAt: new Date()
-      });
-      showToast('Survival pick submitted!', 'success');
-      setSelectedDriverId(null); // Clear selection after save
-    } catch (error) {
-      console.error('Error saving survival pick:', error);
-      showToast('Failed to submit pick.', 'error');
-    } finally {
-      setIsSubmitting(false);
-    }
+    setConfirmAction({
+      action: async () => {
+        setIsSubmitting(true);
+        try {
+          await saveSurvivalPick(user.id, currentEvent.id, {
+            driverId: selectedDriverId,
+            submittedAt: new Date()
+          });
+          showToast('Survival pick submitted!', 'success');
+          setSelectedDriverId(null); // Clear selection after save
+        } catch (error) {
+          console.error('Error saving survival pick:', error);
+          showToast('Failed to submit pick.', 'error');
+        } finally {
+          setIsSubmitting(false);
+        }
+      },
+      message: 'Submit this driver for the survival round?'
+    });
   };
 
   // Helper to get constructor color
@@ -342,6 +346,33 @@ export const SurvivalHubPage: React.FC<SurvivalHubPageProps> = ({
           <span>View Survival Leaderboard</span>
           <span className="text-gray-400">→</span>
         </button>
+
+        {/* Custom Confirmation Modal */}
+        {confirmAction && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-carbon-black/90 backdrop-blur-md p-4 animate-fade-in">
+            <div className="bg-accent-gray border border-primary-red/50 rounded-xl p-8 max-w-sm w-full text-center shadow-[0_0_50px_rgba(218,41,28,0.2)] ring-1 ring-pure-white/10 animate-peek-up">
+              <h2 className="text-xl font-bold text-pure-white mb-4">Confirm Pick</h2>
+              <p className="text-highlight-silver mb-8 text-sm">{confirmAction.message}</p>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    confirmAction.action();
+                    setConfirmAction(null);
+                  }}
+                  className="flex-1 bg-primary-red hover:bg-red-600 text-pure-white font-bold py-3 rounded-lg"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => setConfirmAction(null)}
+                  className="flex-1 bg-transparent hover:bg-pure-white/5 text-highlight-silver font-bold py-3 rounded-lg border border-pure-white/10"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </div>

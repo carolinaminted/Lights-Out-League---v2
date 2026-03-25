@@ -229,7 +229,8 @@ const App: React.FC = () => {
   
   // Survival Challenge State
   const [survivalConfig, setSurvivalConfig] = useState<SurvivalConfig | null>(null);
-  const [survivalPicks, setSurvivalPicks] = useState<SurvivalPickDoc>({});
+  const [mySurvivalPicks, setMySurvivalPicks] = useState<SurvivalPickDoc>({});
+  const [allSurvivalPicks, setAllSurvivalPicks] = useState<{ [uid: string]: SurvivalPickDoc }>({});
   const [survivalStandings, setSurvivalStandings] = useState<SurvivalStanding[]>([]);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -461,7 +462,8 @@ const App: React.FC = () => {
   useEffect(() => {
     if (!user) {
       setSurvivalConfig(null);
-      setSurvivalPicks({});
+      setMySurvivalPicks({});
+      setAllSurvivalPicks({});
       setSurvivalStandings([]);
       return;
     }
@@ -473,10 +475,20 @@ const App: React.FC = () => {
       }
     });
 
-    const unsubPicks = onSnapshot(doc(db, 'survival_picks', user.id), (doc) => {
+    const unsubMyPicks = onSnapshot(doc(db, 'survival_picks', user.id), (doc) => {
       if (doc.exists()) {
-        setSurvivalPicks(doc.data() as SurvivalPickDoc);
+        setMySurvivalPicks(doc.data() as SurvivalPickDoc);
+      } else {
+        setMySurvivalPicks({});
       }
+    });
+
+    const unsubAllPicks = onSnapshot(collection(db, 'survival_picks'), (snapshot) => {
+      const picks: { [uid: string]: SurvivalPickDoc } = {};
+      snapshot.forEach(doc => {
+        picks[doc.id] = doc.data() as SurvivalPickDoc;
+      });
+      setAllSurvivalPicks(picks);
     });
 
     const unsubStandings = onSnapshot(collection(db, 'survival_standings'), (snapshot) => {
@@ -489,7 +501,8 @@ const App: React.FC = () => {
 
     return () => {
       unsubConfig();
-      unsubPicks();
+      unsubMyPicks();
+      unsubAllPicks();
       unsubStandings();
     };
   }, [user]);
@@ -610,7 +623,7 @@ const App: React.FC = () => {
         return <SurvivalHubPage 
           user={user!} 
           survivalConfig={survivalConfig} 
-          survivalPicks={survivalPicks} 
+          survivalPicks={mySurvivalPicks} 
           survivalStandings={survivalStandings} 
           events={mergedEvents} 
           allDrivers={allDrivers} 
@@ -622,7 +635,7 @@ const App: React.FC = () => {
       case 'survival-leaderboard':
         return <SurvivalLeaderboardPage 
           survivalStandings={survivalStandings} 
-          survivalPicks={survivalPicks} 
+          survivalPicks={allSurvivalPicks} 
           events={mergedEvents} 
           allDrivers={allDrivers} 
           currentEventId={survivalConfig?.currentEventId} 
@@ -686,7 +699,7 @@ const App: React.FC = () => {
                 return <AdminSurvivalPage 
                   setAdminSubPage={setAdminSubPage} 
                   survivalConfig={survivalConfig} 
-                  survivalPicks={survivalPicks} 
+                  survivalPicks={allSurvivalPicks} 
                   survivalStandings={survivalStandings} 
                   events={mergedEvents} 
                   raceResults={raceResults} 

@@ -100,6 +100,11 @@ const PenaltyManager: React.FC<{
     const [penaltyPercent, setPenaltyPercent] = useState<string | number>(currentPenalty * 100);
     const [reason, setReason] = useState(currentReason || '');
     const [isSaving, setIsSaving] = useState(false);
+    const [confirmAction, setConfirmAction] = useState<{
+        title: string;
+        message: string;
+        onConfirm: () => void;
+    } | null>(null);
 
     // Sync local state if props change (e.g. parent refresh or navigating between events)
     useEffect(() => {
@@ -116,12 +121,18 @@ const PenaltyManager: React.FC<{
     };
 
     const handleClear = async () => {
-        if (!window.confirm("Clear this penalty?")) return;
-        setIsSaving(true);
-        setPenaltyPercent(0);
-        setReason('');
-        await onSave(eventId, 0, '');
-        setIsSaving(false);
+        setConfirmAction({
+            title: "Clear Penalty",
+            message: "Are you sure you want to clear this penalty?",
+            onConfirm: async () => {
+                setIsSaving(true);
+                setPenaltyPercent(0);
+                setReason('');
+                await onSave(eventId, 0, '');
+                setIsSaving(false);
+                setConfirmAction(null);
+            }
+        });
     };
 
     return (
@@ -174,6 +185,30 @@ const PenaltyManager: React.FC<{
                         Clear Penalty
                     </button>
                 </div>
+
+                {/* Confirmation Modal */}
+                {confirmAction && (
+                    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+                        <div className="bg-accent-gray border border-pure-white/10 rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-scale-in">
+                            <h3 className="text-xl font-black text-pure-white mb-2 uppercase italic tracking-tighter">{confirmAction.title}</h3>
+                            <p className="text-highlight-silver text-sm mb-6 leading-relaxed">{confirmAction.message}</p>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setConfirmAction(null)}
+                                    className="flex-1 px-4 py-3 rounded-xl bg-carbon-black border border-pure-white/10 text-ghost-white font-bold text-xs uppercase tracking-widest hover:bg-pure-white/5 transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={confirmAction.onConfirm}
+                                    className="flex-1 px-4 py-3 rounded-xl bg-primary-red text-pure-white font-bold text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-lg shadow-primary-red/20"
+                                >
+                                    Confirm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

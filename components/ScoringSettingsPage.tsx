@@ -22,6 +22,11 @@ const ScoringSettingsPage: React.FC<ScoringSettingsPageProps> = ({ settings, set
     const [editForm, setEditForm] = useState<ScoringProfile | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const { showToast } = useToast();
+    const [confirmAction, setConfirmAction] = useState<{
+        title: string;
+        message: string;
+        onConfirm: () => void;
+    } | null>(null);
     
     useEffect(() => {
         setLocalSettings(settings);
@@ -63,24 +68,30 @@ const ScoringSettingsPage: React.FC<ScoringSettingsPageProps> = ({ settings, set
             showToast("Cannot delete the active profile.", 'error');
             return;
         }
-        if (!window.confirm(`Are you sure you want to delete "${editForm.name}"?`)) return;
 
-        const updatedProfiles = localSettings.profiles.filter(p => p.id !== editForm.id);
-        const newSettings = { ...localSettings, profiles: updatedProfiles };
-        
-        setIsSaving(true);
-        try {
-            await saveScoringSettings(newSettings);
-            setLocalSettings(newSettings);
-            const active = newSettings.profiles.find(p => p.id === newSettings.activeProfileId) || newSettings.profiles[0];
-            setEditForm(active ? JSON.parse(JSON.stringify(active)) : null);
-            showToast("Profile deleted.", 'success');
-        } catch (e) {
-            console.error(e);
-            showToast("Failed to delete profile.", 'error');
-        } finally {
-            setIsSaving(false);
-        }
+        setConfirmAction({
+            title: "Delete Profile",
+            message: `Are you sure you want to delete "${editForm.name}"? This action cannot be undone.`,
+            onConfirm: async () => {
+                const updatedProfiles = localSettings.profiles.filter(p => p.id !== editForm.id);
+                const newSettings = { ...localSettings, profiles: updatedProfiles };
+                
+                setIsSaving(true);
+                setConfirmAction(null);
+                try {
+                    await saveScoringSettings(newSettings);
+                    setLocalSettings(newSettings);
+                    const active = newSettings.profiles.find(p => p.id === newSettings.activeProfileId) || newSettings.profiles[0];
+                    setEditForm(active ? JSON.parse(JSON.stringify(active)) : null);
+                    showToast("Profile deleted.", 'success');
+                } catch (e) {
+                    console.error(e);
+                    showToast("Failed to delete profile.", 'error');
+                } finally {
+                    setIsSaving(false);
+                }
+            }
+        });
     };
 
     const handleMakeActive = async () => {
@@ -334,6 +345,30 @@ const ScoringSettingsPage: React.FC<ScoringSettingsPageProps> = ({ settings, set
                     </div>
                 )}
             </div>
+
+            {/* Confirmation Modal */}
+            {confirmAction && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+                    <div className="bg-accent-gray border border-pure-white/10 rounded-2xl p-6 max-w-sm w-full shadow-2xl animate-scale-in">
+                        <h3 className="text-xl font-black text-pure-white mb-2 uppercase italic tracking-tighter">{confirmAction.title}</h3>
+                        <p className="text-highlight-silver text-sm mb-6 leading-relaxed">{confirmAction.message}</p>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setConfirmAction(null)}
+                                className="flex-1 px-4 py-3 rounded-xl bg-carbon-black border border-pure-white/10 text-ghost-white font-bold text-xs uppercase tracking-widest hover:bg-pure-white/5 transition-all"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmAction.onConfirm}
+                                className="flex-1 px-4 py-3 rounded-xl bg-primary-red text-pure-white font-bold text-xs uppercase tracking-widest hover:bg-red-600 transition-all shadow-lg shadow-primary-red/20"
+                            >
+                                Confirm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

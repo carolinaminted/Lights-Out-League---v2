@@ -90,7 +90,7 @@ const PicksForm: React.FC<PicksFormProps> = ({
   useEffect(() => {
     if (isFormDisabled && isEditing) {
         setIsEditing(false);
-        showToast("This event has been locked by the administrator.", 'warning');
+        showToast("This event has been locked by the administrator.", 'info');
     }
   }, [isFormDisabled, isEditing, showToast]);
 

@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { PageHeader } from './ui/PageHeader.tsx';
 import { TrophyIcon } from './icons/TrophyIcon.tsx';
+import { BackIcon } from './icons/BackIcon.tsx';
 import { SurvivalConfig, SurvivalStanding, SurvivalPickDoc, Event, User, RaceResults } from '../types.ts';
 import { initializeSurvivalChallenge, saveSurvivalConfig, batchUpdateSurvivalStandings, getAllUsers } from '../services/firestoreService.ts';
 import { processSurvivalRound, resolveTiebreaker } from '../services/survivalService.ts';
@@ -13,7 +14,7 @@ interface AdminSurvivalPageProps {
   survivalPicks: { [uid: string]: SurvivalPickDoc };
   events: Event[];
   raceResults: RaceResults;
-  setAdminSubPage: (page: 'dashboard') => void;
+  setAdminSubPage: (page: any) => void;
 }
 
 export const AdminSurvivalPage: React.FC<AdminSurvivalPageProps> = ({
@@ -273,7 +274,15 @@ export const AdminSurvivalPage: React.FC<AdminSurvivalPageProps> = ({
       <PageHeader 
         title="Manage Survival Challenge" 
         icon={TrophyIcon} 
-        onBack={() => setAdminSubPage('dashboard')} 
+        leftAction={(
+          <button 
+            onClick={() => setAdminSubPage('dashboard')}
+            className="flex items-center gap-2 text-highlight-silver hover:text-pure-white transition-colors bg-carbon-black/50 px-4 py-2 rounded-lg border border-pure-white/10"
+          >
+            <BackIcon className="w-4 h-4" /> 
+            <span className="text-sm font-bold tracking-widest uppercase">Dashboard</span>
+          </button>
+        )}
       />
 
       <div className="p-4 space-y-6 max-w-3xl mx-auto">

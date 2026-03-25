@@ -1,10 +1,10 @@
-import React, { ErrorInfo, ReactNode } from 'react';
+import * as React from 'react';
 import { F1CarIcon } from './icons/F1CarIcon.tsx';
 
 interface ErrorBoundaryProps {
-  children?: ReactNode;
+  children?: React.ReactNode;
   onReset?: () => void;
-  fallback?: ReactNode;
+  fallback?: React.ReactNode;
 }
 
 interface ErrorBoundaryState {
@@ -25,7 +25,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     console.error("Uncaught error caught by ErrorBoundary:", error, errorInfo);
   }
 
@@ -39,7 +39,7 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
     }
   }
 
-  render(): ReactNode {
+  render(): React.ReactNode {
     const { hasError, error } = this.state;
     const { children, fallback } = this.props;
 

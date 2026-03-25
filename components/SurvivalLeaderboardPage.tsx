@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { PageHeader } from './ui/PageHeader.tsx';
 import { TrophyIcon } from './icons/TrophyIcon.tsx';
+import { BackIcon } from './icons/BackIcon.tsx';
 import { SurvivalStanding, SurvivalPickDoc, Event, Driver } from '../types.ts';
 import { SurvivalStatusBadge } from './SurvivalStatusBadge.tsx';
 
@@ -60,7 +61,15 @@ export const SurvivalLeaderboardPage: React.FC<SurvivalLeaderboardPageProps> = (
       <PageHeader 
         title="Survival Standings" 
         icon={TrophyIcon} 
-        onBack={onBack} 
+        leftAction={(
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-2 text-highlight-silver hover:text-pure-white transition-colors bg-carbon-black/50 px-4 py-2 rounded-lg border border-pure-white/10"
+          >
+            <BackIcon className="w-4 h-4" /> 
+            <span className="text-sm font-bold tracking-widest uppercase">Back</span>
+          </button>
+        )}
       />
 
       <div className="p-4 max-w-3xl mx-auto space-y-6">

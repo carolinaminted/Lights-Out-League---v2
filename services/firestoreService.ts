@@ -1,9 +1,9 @@
-import { db, functions } from './firebase.ts';
+import { db, functions } from './firebase';
 import { doc, getDoc, setDoc, collection, getDocs, updateDoc, query, orderBy, addDoc, Timestamp, runTransaction, deleteDoc, writeBatch, serverTimestamp, where, limit, startAfter, QueryDocumentSnapshot, DocumentData, deleteField, onSnapshot } from '@firebase/firestore';
 import { httpsCallable } from '@firebase/functions';
-import { PickSelection, User, RaceResults, ScoringSettingsDoc, Driver, Constructor, EventSchedule, InvitationCode, AdminLogEntry, LeagueConfig, MaintenanceState, SurvivalConfig, SurvivalPickDoc, SurvivalPick, SurvivalStanding } from '../types.ts';
+import { PickSelection, User, RaceResults, ScoringSettingsDoc, Driver, Constructor, EventSchedule, InvitationCode, AdminLogEntry, LeagueConfig, MaintenanceState, SurvivalConfig, SurvivalPickDoc, SurvivalPick, SurvivalStanding } from '../types';
 import { User as FirebaseUser } from '@firebase/auth';
-import { EVENTS, LEAGUE_DUES_AMOUNT, CURRENT_SEASON } from '../constants.ts';
+import { EVENTS, LEAGUE_DUES_AMOUNT, CURRENT_SEASON } from '../constants';
 
 export const DEFAULT_PAGE_SIZE = 50;
 export const MAX_PAGE_SIZE = 100;
@@ -476,7 +476,8 @@ export const batchUpdateSurvivalStandings = async (
 // --- Challenge Lifecycle (Admin) ---
 export const initializeSurvivalChallenge = async (
   startEventId: string,
-  participants: { uid: string; displayName: string }[]
+  participants: { uid: string; displayName: string }[],
+  maxDriverUses: number = 3
 ) => {
   // 1. Save config
   const configRef = doc(db, 'app_state', 'survival_config');
@@ -485,7 +486,7 @@ export const initializeSurvivalChallenge = async (
     status: 'active',
     startEventId,
     currentEventId: startEventId,
-    maxDriverUses: 3,
+    maxDriverUses,
     lockedParticipants: participants.map(p => p.uid),
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp()
